@@ -24,6 +24,7 @@ export default {
         const { error } = Joi.validate(req.body, schema);
 
         if (error) {
+            console.log(error);
             res.status(400).send({
                 message: 'Invalid Registration Information',
             });

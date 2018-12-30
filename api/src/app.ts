@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import 'reflect-metadata'; // Necessary for TypeORM
 import { createConnection } from 'typeorm';
 
@@ -7,6 +8,7 @@ import Router from './router';
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 // Getting routes from separate file
 app.use('/', Router);

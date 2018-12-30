@@ -1,13 +1,20 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 import './index.css';
+
 import App from './App';
+import Register from './components/Register';
+
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <Router>
-        <Route exact path="/" component={App} />
+        <React.Fragment>
+            <Route exact path="/" component={App} />
+            <Route path="/register" component={Register} />
+        </React.Fragment>
     </Router>,
     document.getElementById('root')
 );
