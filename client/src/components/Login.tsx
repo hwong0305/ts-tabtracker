@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
+import { userLogin } from '../interfaces';
+
 const styles = (theme: Theme) =>
     createStyles({
         main: {
@@ -41,7 +43,22 @@ const styles = (theme: Theme) =>
         },
     });
 
-class Login extends React.PureComponent<WithStyles<typeof styles>, {}> {
+class Login extends React.PureComponent<WithStyles<typeof styles>, userLogin> {
+    constructor(props: WithStyles<typeof styles>) {
+        super(props);
+
+        this.state = {
+            username: '',
+            password: '',
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        this.setState({ ...this.state, [name]: value });
+    };
     render() {
         const { classes } = this.props;
         return (
@@ -54,8 +71,21 @@ class Login extends React.PureComponent<WithStyles<typeof styles>, {}> {
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
-                    <TextField label="Username" name="username" fullWidth />
-                    <TextField label="Password" type="password" name="password" fullWidth />
+                    <TextField
+                        label="Username"
+                        name="username"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                        fullWidth
+                    />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                        fullWidth
+                    />
                     <Button
                         variant="contained"
                         color="primary"
