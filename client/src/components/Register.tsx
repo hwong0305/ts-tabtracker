@@ -9,8 +9,13 @@ import TextField from '@material-ui/core/TextField';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { History } from 'history';
 
 import { User } from '../interfaces';
+
+interface Props extends WithStyles<typeof styles> {
+    history: History;
+}
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -46,8 +51,8 @@ const styles = (theme: Theme) =>
         },
     });
 
-class Register extends React.Component<WithStyles<typeof styles>, User> {
-    constructor(props: WithStyles<typeof styles>) {
+class Register extends React.Component<Props, User> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             username: '',
@@ -67,7 +72,12 @@ class Register extends React.Component<WithStyles<typeof styles>, User> {
 
     handleSubmit = () => {
         const { username, email, password, firstName, lastName } = this.state;
-        authenticationService.register({ username, email, password, firstName, lastName });
+        authenticationService
+            .register({ username, email, password, firstName, lastName })
+            .then(() => {
+                this.props.history.push('/');
+            })
+            .catch(err => console.log(err));
     };
     render() {
         const { classes } = this.props;
