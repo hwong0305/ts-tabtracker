@@ -42,10 +42,6 @@ const styles = (theme: Theme) =>
             margin: theme.spacing.unit,
             backgroundColor: theme.palette.secondary.main,
         },
-        form: {
-            width: '100%', // Fix IE 11 issue.
-            marginTop: theme.spacing.unit,
-        },
         submit: {
             marginTop: theme.spacing.unit * 3,
         },
@@ -77,7 +73,10 @@ class Register extends React.Component<Props, User> {
             .then(() => {
                 this.props.history.push('/');
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log('In Error');
+                console.log(err);
+            });
     };
     render() {
         const { classes } = this.props;
