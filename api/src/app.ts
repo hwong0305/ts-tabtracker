@@ -8,6 +8,7 @@ import Router from './router';
 
 const app = express();
 app.use(bodyParser.json());
+// For development only
 app.use(cors());
 
 // Getting routes from separate file
