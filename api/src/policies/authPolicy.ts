@@ -5,7 +5,7 @@ export default {
     register(req: Request, res: Response, next: NextFunction) {
         const schema = Joi.object().keys({
             username: Joi.string()
-                .alphanum()
+                .regex(/^[a-zA-Z0-9._@]+$/)
                 .required(),
             password: Joi.string()
                 .regex(/^[a-zA-Z0-9]{6,24}$/)
