@@ -12,6 +12,13 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import { userLogin } from '../interfaces';
+import { History } from 'history';
+
+import authenticationService from '../services/authenticationService';
+
+interface Props extends WithStyles<typeof styles> {
+    history: History;
+}
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -43,8 +50,8 @@ const styles = (theme: Theme) =>
         },
     });
 
-class Login extends React.PureComponent<WithStyles<typeof styles>, userLogin> {
-    constructor(props: WithStyles<typeof styles>) {
+class Login extends React.PureComponent<Props, userLogin> {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -53,11 +60,21 @@ class Login extends React.PureComponent<WithStyles<typeof styles>, userLogin> {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         this.setState({ ...this.state, [name]: value });
+    };
+    handleSubmit = () => {
+        const { username, password } = this.state;
+        authenticationService
+            .login({ username, password })
+            .then(() => {
+                this.props.history.push('/');
+            })
+            .catch(err => console.log(err));
     };
     render() {
         const { classes } = this.props;
@@ -90,6 +107,7 @@ class Login extends React.PureComponent<WithStyles<typeof styles>, userLogin> {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        onClick={this.handleSubmit}
                         fullWidth
                     >
                         Login
