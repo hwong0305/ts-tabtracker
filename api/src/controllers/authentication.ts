@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../entity/User';
+import createToken from './utilities/createToken';
 import hashPassword from './utilities/hashPassword';
 import comparePassword from './utilities/comparePassword';
 import { getConnection } from 'typeorm';
@@ -17,7 +18,10 @@ export default {
             await getConnection()
                 .getRepository(User)
                 .save(user);
-            res.json(user);
+            res.json({
+                user: JSON.parse(JSON.stringify(user)),
+                token: createToken(JSON.parse(JSON.stringify(user))),
+            });
         } catch (err) {
             res.status(500).send({
                 error: err,
@@ -34,12 +38,17 @@ export default {
                     req.body.password,
                     user.password
                 );
-                if (isPasswordValid) res.json(user);
+                if (isPasswordValid)
+                    res.json({
+                        user: JSON.parse(JSON.stringify(user)),
+                        token: createToken(JSON.parse(JSON.stringify(user))),
+                    });
                 else {
                     res.status(400).send({ message: 'Incorrect Password' });
                 }
             }
         } catch (err) {
+            console.log(err);
             res.status(500).send({
                 error: err,
             });
