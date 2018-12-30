@@ -62,7 +62,6 @@ class Login extends React.PureComponent<Props, userLogin> {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         this.setState({ ...this.state, [name]: value });
@@ -71,8 +70,8 @@ class Login extends React.PureComponent<Props, userLogin> {
         const { username, password } = this.state;
         authenticationService
             .login({ username, password })
-            .then(() => {
-                this.props.history.push('/');
+            .then(response => {
+                if (response) this.props.history.push('/');
             })
             .catch(err => console.log(err));
     };

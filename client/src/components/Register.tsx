@@ -70,8 +70,8 @@ class Register extends React.Component<Props, User> {
         const { username, email, password, firstName, lastName } = this.state;
         authenticationService
             .register({ username, email, password, firstName, lastName })
-            .then(() => {
-                this.props.history.push('/');
+            .then(response => {
+                if (response) this.props.history.push('/');
             })
             .catch(err => {
                 console.log('In Error');
