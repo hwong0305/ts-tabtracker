@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-
 import './index.css';
 
 import App from './App';
@@ -10,14 +9,53 @@ import Register from './components/Register';
 
 import * as serviceWorker from './serviceWorker';
 
+interface UserContextInterface {
+    state: {
+        loggedIn: boolean;
+        token: string | null;
+        logout: Function;
+        login: Function;
+    };
+}
+export const UserContext = React.createContext<UserContextInterface | null>(null);
+
+export class UserProvider extends React.Component {
+    state = {
+        loggedIn: false,
+        token: null,
+        logout: () => {
+            localStorage.removeItem('token');
+            this.setState({
+                loggedIn: false,
+                token: null,
+            });
+        },
+        login: (token: string) => {
+            this.setState({
+                loggedIn: true,
+                token,
+            });
+        },
+    };
+    render() {
+        return (
+            <UserContext.Provider value={{ state: this.state }}>
+                {this.props.children}
+            </UserContext.Provider>
+        );
+    }
+}
+
 ReactDOM.render(
-    <Router>
-        <React.Fragment>
-            <Route exact path="/" component={App} />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-        </React.Fragment>
-    </Router>,
+    <UserProvider>
+        <Router>
+            <React.Fragment>
+                <Route exact path="/" component={App} />
+                <Route path="/login" component={Login} />
+                <Route path="/register" component={Register} />
+            </React.Fragment>
+        </Router>
+    </UserProvider>,
     document.getElementById('root')
 );
 

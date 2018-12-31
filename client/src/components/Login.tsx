@@ -71,7 +71,10 @@ class Login extends React.PureComponent<Props, userLogin> {
         authenticationService
             .login({ username, password })
             .then(response => {
-                if (response) this.props.history.push('/');
+                if (response) {
+                    localStorage.setItem('token', response.token);
+                    this.props.history.push('/');
+                }
             })
             .catch(err => console.log(err));
     };

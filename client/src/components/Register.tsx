@@ -71,7 +71,10 @@ class Register extends React.Component<Props, User> {
         authenticationService
             .register({ username, email, password, firstName, lastName })
             .then(response => {
-                if (response) this.props.history.push('/');
+                if (response) {
+                    localStorage.setItem('token', response.token);
+                    this.props.history.push('/');
+                }
             })
             .catch(err => {
                 console.log('In Error');
