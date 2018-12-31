@@ -4,34 +4,80 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
+
+import { Link } from 'react-router-dom';
+import { UserContext } from '../index';
 
 const styles = createStyles({
     root: {
+        width: '100%',
         flexGrow: 1,
     },
     grow: {
         flexGrow: 1,
     },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
 });
 
-const MyAppBar: React.SFC<WithStyles<typeof styles>> = props => {
-    const { classes } = props;
-    return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        TabTracker
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        </div>
-    );
-};
+const LoginLink: React.SFC<any> = props => <Link to="/login" {...props} />;
+const RegisterLink: React.SFC<any> = props => <Link to="/register" {...props} />;
+
+const LoginButton: React.SFC<{}> = () => (
+    <React.Fragment>
+        <Button color="inherit" component={LoginLink}>
+            Login
+        </Button>
+        <Button color="inherit" component={RegisterLink}>
+            Register
+        </Button>
+    </React.Fragment>
+);
+
+const LogoutButton: React.SFC<{}> = () => (
+    <UserContext.Consumer>
+        {context =>
+            context && (
+                <Button
+                    color="inherit"
+                    onClick={() => {
+                        context.state.logout();
+                        console.log(context.state.loggedIn);
+                    }}
+                >
+                    Logout
+                </Button>
+            )
+        }
+    </UserContext.Consumer>
+);
+
+class MyAppBar extends React.Component<WithStyles<typeof styles>, {}> {
+    render() {
+        const { classes } = this.props;
+        return (
+            <UserContext.Consumer>
+                {context =>
+                    context && (
+                        <div className={classes.root}>
+                            <AppBar position="static" color="primary">
+                                <Toolbar>
+                                    <Typography
+                                        variant="h6"
+                                        color="inherit"
+                                        className={classes.grow}
+                                    >
+                                        TabTracker
+                                    </Typography>
+                                    {!context.state.loggedIn && <LoginButton />}
+                                    {context.state.loggedIn && <LogoutButton />}
+                                </Toolbar>
+                            </AppBar>
+                        </div>
+                    )
+                }
+            </UserContext.Consumer>
+        );
+    }
+}
 
 export default withStyles(styles)(MyAppBar);

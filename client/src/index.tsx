@@ -25,13 +25,13 @@ export class UserProvider extends React.Component {
         token: null,
         logout: () => {
             localStorage.removeItem('token');
-            this.setState({
+            return this.setState({
                 loggedIn: false,
                 token: null,
             });
         },
         login: (token: string) => {
-            this.setState({
+            return this.setState({
                 loggedIn: true,
                 token,
             });
