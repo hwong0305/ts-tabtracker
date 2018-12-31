@@ -48,6 +48,9 @@ const styles = (theme: Theme) =>
         submit: {
             marginTop: theme.spacing.unit * 3,
         },
+        cancel: {
+            marginTop: theme.spacing.unit * 2,
+        },
     });
 
 class Login extends React.PureComponent<Props, userLogin> {
@@ -113,6 +116,14 @@ class Login extends React.PureComponent<Props, userLogin> {
                         fullWidth
                     >
                         Login
+                    </Button>
+                    <Button
+                        variant="contained"
+                        className={classes.cancel}
+                        onClick={() => this.props.history.goBack()}
+                        fullWidth
+                    >
+                        Cancel
                     </Button>
                 </Paper>
             </div>
