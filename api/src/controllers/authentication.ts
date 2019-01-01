@@ -85,4 +85,36 @@ export default {
             return null;
         }
     },
+    async registerUser(
+        username: string,
+        password: string,
+        email: string,
+        firstName: string,
+        lastName: string
+    ) {
+        try {
+            const user = new User();
+            user.username = username;
+            user.password = await hashPassword(password);
+            user.email = email;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            await getConnection()
+                .getRepository(User)
+                .save(user);
+
+            const userResponse = {
+                user,
+                token: createToken(JSON.parse(JSON.stringify(user))),
+                responseError: false,
+            };
+
+            return userResponse;
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
+        }
+    },
 };

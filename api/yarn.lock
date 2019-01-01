@@ -124,6 +124,11 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/graphql@^14.0.4":
+  version "14.0.4"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.4.tgz#d71a75967cd93c33eaea32b626b362ce0f2b2ae9"
+  integrity sha512-gI98ANelzzpq7lZzuYCUJg8LZDjQc7ekj7cxoWt8RezOKaVaAyK27U6AHa9LEqikP1NUhyi8blQQkHYHVRZ7Tg==
+
 "@types/joi@^14.0.1":
   version "14.0.1"
   resolved "https://registry.yarnpkg.com/@types/joi/-/joi-14.0.1.tgz#739be8a8899a75631a3c9f15611e54bbab06c024"
