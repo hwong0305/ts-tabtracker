@@ -65,4 +65,24 @@ export default {
             });
         }
     },
+    async fetchUsers() {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const users = await userRepository.find();
+            return users;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    },
+    async fetchUser(username: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne({ username });
+            return user;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    },
 };
