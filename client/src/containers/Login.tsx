@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { userLogin } from '../interfaces';
+import { LoginForm } from '../interfaces';
 import { History } from 'history';
 
 import authenticationService from '../services/authenticationService';
@@ -43,23 +43,30 @@ const styles = (theme: Theme) =>
         },
         avatar: {
             margin: theme.spacing.unit,
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: '#00FFFF',
         },
         submit: {
             marginTop: theme.spacing.unit * 3,
+            backgroundColor: '#5baaff',
         },
         cancel: {
             marginTop: theme.spacing.unit * 2,
         },
+        error: {
+            color: 'Red',
+        },
     });
 
-class Login extends React.PureComponent<Props, userLogin> {
+class Login extends React.PureComponent<Props, LoginForm> {
     constructor(props: Props) {
         super(props);
 
         this.state = {
             username: '',
             password: '',
+            formError: false,
+            usernameError: '',
+            passwordError: '',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -67,19 +74,36 @@ class Login extends React.PureComponent<Props, userLogin> {
     }
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        this.setState({ ...this.state, [name]: value });
+        this.setState({ ...this.state, [name]: value, usernameError: '', passwordError: '' });
     };
     handleSubmit = () => {
         const { username, password } = this.state;
-        authenticationService
-            .login({ username, password })
-            .then(response => {
-                if (response) {
-                    localStorage.setItem('token', response.token);
-                    this.props.history.push('/');
-                }
-            })
-            .catch(err => console.log(err));
+        if (username.length !== 0 && password.length !== 0) {
+            authenticationService
+                .login({ username, password })
+                .then(response => {
+                    if (response !== 'error') {
+                        localStorage.setItem('token', response.token);
+                        this.props.history.push('/');
+                    } else {
+                        this.setState({ formError: true });
+                    }
+                })
+                .catch(err => console.log(err));
+        } else {
+            if (username.length === 0)
+                this.setState({ usernameError: 'Please enter valid username' });
+            if (password.length === 0)
+                this.setState({ passwordError: 'Please enter a valid password' });
+            setTimeout(
+                () =>
+                    this.setState({
+                        usernameError: '',
+                        passwordError: '',
+                    }),
+                10000
+            );
+        }
     };
     render() {
         const { classes } = this.props;
@@ -93,38 +117,52 @@ class Login extends React.PureComponent<Props, userLogin> {
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
-                    <TextField
-                        label="Username"
-                        name="username"
-                        value={this.state.username}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={this.handleSubmit}
-                        fullWidth
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        variant="contained"
-                        className={classes.cancel}
-                        onClick={() => this.props.history.goBack()}
-                        fullWidth
-                    >
-                        Cancel
-                    </Button>
+                    {this.state.formError ? (
+                        <h6 className={classes.error}>Invalid Login Crediential</h6>
+                    ) : null}
+                    <form>
+                        <TextField
+                            label="Username"
+                            name="username"
+                            value={this.state.username}
+                            onChange={this.handleChange}
+                            helperText={this.state.usernameError}
+                            error={this.state.usernameError ? true : false}
+                            required
+                            fullWidth
+                        />
+                        <TextField
+                            label="Password"
+                            type="password"
+                            name="password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            helperText={this.state.passwordError}
+                            error={this.state.passwordError ? true : false}
+                            required
+                            fullWidth
+                        />
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            onClick={this.handleSubmit}
+                            disabled={
+                                this.state.usernameError || this.state.passwordError ? true : false
+                            }
+                            fullWidth
+                        >
+                            Login
+                        </Button>
+                        <Button
+                            variant="contained"
+                            className={classes.cancel}
+                            onClick={() => this.props.history.goBack()}
+                            fullWidth
+                        >
+                            Cancel
+                        </Button>
+                    </form>
                 </Paper>
             </div>
         );

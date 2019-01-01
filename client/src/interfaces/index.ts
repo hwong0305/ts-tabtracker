@@ -10,3 +10,11 @@ export interface userLogin {
     username: string;
     password: string;
 }
+
+export interface LoginForm {
+    username: string;
+    password: string;
+    formError: boolean;
+    usernameError: string;
+    passwordError: string;
+}
