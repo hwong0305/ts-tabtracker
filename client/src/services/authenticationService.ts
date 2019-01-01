@@ -8,6 +8,7 @@ export default {
             return response.data;
         } catch (err) {
             console.log(err);
+            return 'error';
         }
     },
     async login(user: userLogin) {

@@ -18,3 +18,17 @@ export interface LoginForm {
     usernameError: string;
     passwordError: string;
 }
+
+export interface RegisterForm {
+    formError: boolean;
+    username: string;
+    usernameError: string;
+    email: string;
+    emailError: string;
+    password: string;
+    passwordError: string;
+    firstName: string;
+    firstNameError: string;
+    lastName: string;
+    lastNameError: string;
+}

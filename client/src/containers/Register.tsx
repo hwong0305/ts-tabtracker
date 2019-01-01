@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { History } from 'history';
 
-import { User } from '../interfaces';
+import { RegisterForm } from '../interfaces';
 
 interface Props extends WithStyles<typeof styles> {
     history: History;
@@ -48,17 +48,26 @@ const styles = (theme: Theme) =>
         cancel: {
             marginTop: theme.spacing.unit * 2,
         },
+        error: {
+            color: 'red',
+        },
     });
 
-class Register extends React.Component<Props, User> {
+class Register extends React.Component<Props, RegisterForm> {
     constructor(props: Props) {
         super(props);
         this.state = {
+            formError: false,
             username: '',
+            usernameError: '',
             password: '',
+            passwordError: '',
             email: '',
+            emailError: '',
             firstName: '',
+            firstNameError: '',
             lastName: '',
+            lastNameError: '',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -66,23 +75,104 @@ class Register extends React.Component<Props, User> {
     }
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value }: { name: string; value: string } = event.currentTarget;
-        this.setState({ ...this.state, [name]: value });
+        this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
 
     handleSubmit = () => {
         const { username, email, password, firstName, lastName } = this.state;
-        authenticationService
-            .register({ username, email, password, firstName, lastName })
-            .then(response => {
-                if (response) {
-                    localStorage.setItem('token', response.token);
-                    this.props.history.push('/');
-                }
-            })
-            .catch(err => {
-                console.log('In Error');
-                console.log(err);
-            });
+        if (
+            username.length === 0 ||
+            email.length === 0 ||
+            password.length === 0 ||
+            firstName.length === 0 ||
+            lastName.length === 0
+        ) {
+            // Check each field for what is empty
+            if (username.length === 0) {
+                this.setState({
+                    usernameError: 'Username is required',
+                });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            usernameError: '',
+                        }),
+                    10000
+                );
+            }
+            if (password.length === 0) {
+                this.setState({
+                    passwordError: 'Password is required',
+                });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            passwordError: '',
+                        }),
+                    10000
+                );
+            }
+            if (firstName.length === 0) {
+                this.setState({
+                    firstNameError: 'First Name is required',
+                });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            firstNameError: '',
+                        }),
+                    10000
+                );
+            }
+            if (lastName.length === 0) {
+                this.setState({
+                    lastNameError: 'Last Name is required',
+                });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            lastNameError: '',
+                        }),
+                    10000
+                );
+            }
+            if (email.length === 0) {
+                this.setState({
+                    emailError: 'Email is required',
+                });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            emailError: '',
+                        }),
+                    10000
+                );
+            }
+        } else {
+            authenticationService
+                .register({ username, email, password, firstName, lastName })
+                .then(response => {
+                    if (response !== 'error') {
+                        localStorage.setItem('token', response.token);
+                        this.props.history.push('/');
+                    } else {
+                        this.setState({
+                            formError: true,
+                        });
+                        setTimeout(
+                            () =>
+                                this.setState({
+                                    formError: false,
+                                }),
+                            10000
+                        );
+                    }
+                })
+                .catch(err => {
+                    console.log('In Error');
+                    console.log(err);
+                });
+        }
     };
     render() {
         const { classes } = this.props;
@@ -96,11 +186,17 @@ class Register extends React.Component<Props, User> {
                     <Typography component="h1" variant="h5">
                         Register
                     </Typography>
+                    {this.state.formError ? (
+                        <h6 className={classes.error}>Invalid Registration Information</h6>
+                    ) : null}
                     <TextField
                         label="Username"
                         name="username"
                         onChange={this.handleChange}
                         value={this.state.username}
+                        error={this.state.usernameError ? true : false}
+                        helperText={this.state.usernameError}
+                        required
                         fullWidth
                     />
                     <TextField
@@ -109,6 +205,9 @@ class Register extends React.Component<Props, User> {
                         label="Password"
                         onChange={this.handleChange}
                         value={this.state.password}
+                        error={this.state.passwordError ? true : false}
+                        helperText={this.state.passwordError}
+                        required
                         fullWidth
                     />
                     <TextField
@@ -116,6 +215,9 @@ class Register extends React.Component<Props, User> {
                         name="firstName"
                         onChange={this.handleChange}
                         value={this.state.firstName}
+                        error={this.state.firstNameError ? true : false}
+                        helperText={this.state.firstNameError}
+                        required
                         fullWidth
                     />
                     <TextField
@@ -123,6 +225,9 @@ class Register extends React.Component<Props, User> {
                         name="lastName"
                         onChange={this.handleChange}
                         value={this.state.lastName}
+                        error={this.state.lastNameError ? true : false}
+                        helperText={this.state.lastNameError}
+                        required
                         fullWidth
                     />
                     <TextField
@@ -130,6 +235,9 @@ class Register extends React.Component<Props, User> {
                         name="email"
                         onChange={this.handleChange}
                         value={this.state.email}
+                        error={this.state.emailError ? true : false}
+                        helperText={this.state.emailError}
+                        required
                         fullWidth
                     />
                     <Button
@@ -137,6 +245,15 @@ class Register extends React.Component<Props, User> {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
+                        disabled={
+                            this.state.usernameError ||
+                            this.state.passwordError ||
+                            this.state.emailError ||
+                            this.state.firstNameError ||
+                            this.state.lastNameError
+                                ? true
+                                : false
+                        }
                         fullWidth
                     >
                         Submit

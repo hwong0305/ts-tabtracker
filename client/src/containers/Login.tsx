@@ -74,7 +74,7 @@ class Login extends React.PureComponent<Props, LoginForm> {
     }
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        this.setState({ ...this.state, [name]: value, usernameError: '', passwordError: '' });
+        this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
     handleSubmit = () => {
         const { username, password } = this.state;
@@ -87,14 +87,13 @@ class Login extends React.PureComponent<Props, LoginForm> {
                         this.props.history.push('/');
                     } else {
                         this.setState({ formError: true });
+                        setTimeout(() => this.setState({ formError: false }), 10000);
                     }
                 })
                 .catch(err => console.log(err));
         } else {
-            if (username.length === 0)
-                this.setState({ usernameError: 'Please enter valid username' });
-            if (password.length === 0)
-                this.setState({ passwordError: 'Please enter a valid password' });
+            if (username.length === 0) this.setState({ usernameError: 'Username is required' });
+            if (password.length === 0) this.setState({ passwordError: 'Password is required' });
             setTimeout(
                 () =>
                     this.setState({
