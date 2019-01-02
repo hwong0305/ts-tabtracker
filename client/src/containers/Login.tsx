@@ -15,8 +15,6 @@ import { Redirect } from 'react-router-dom';
 import { LoginForm } from '../interfaces';
 import { History } from 'history';
 
-import authenticationService from '../services/authenticationService';
-
 const LOGIN = gql`
     mutation login($username: String!, $password: String!) {
         login(username: $username, password: $password) {
@@ -26,6 +24,7 @@ const LOGIN = gql`
                 email
             }
             token
+            responseError
         }
     }
 `;
@@ -90,21 +89,15 @@ class Login extends React.PureComponent<Props, LoginForm> {
         const { name, value } = event.target;
         this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
-    handleSubmit = () => {
+    handleSubmit = (login: Function) => {
         const { username, password } = this.state;
         if (username.length !== 0 && password.length !== 0) {
-            authenticationService
-                .login({ username, password })
-                .then(response => {
-                    if (response !== 'error') {
-                        localStorage.setItem('token', response.token);
-                        this.props.history.push('/');
-                    } else {
-                        this.setState({ formError: true });
-                        setTimeout(() => this.setState({ formError: false }), 10000);
-                    }
-                })
-                .catch(err => console.log(err));
+            login({
+                variables: {
+                    username,
+                    password,
+                },
+            });
         } else {
             if (username.length === 0) this.setState({ usernameError: 'Username is required' });
             if (password.length === 0) this.setState({ passwordError: 'Password is required' });
@@ -132,7 +125,7 @@ class Login extends React.PureComponent<Props, LoginForm> {
                             <Typography component="h1" variant="h5">
                                 Login
                             </Typography>
-                            {this.state.formError ? (
+                            {data && data.login.responseError ? (
                                 <h6 className={classes.error}>Invalid Login Crediential</h6>
                             ) : null}
                             <form>
@@ -161,7 +154,7 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                     variant="contained"
                                     color="primary"
                                     className={classes.submit}
-                                    onClick={this.handleSubmit}
+                                    onClick={() => this.handleSubmit(login)}
                                     disabled={
                                         this.state.usernameError || this.state.passwordError
                                             ? true
@@ -174,28 +167,15 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                 <Button
                                     variant="contained"
                                     className={classes.cancel}
-                                    onClick={() => {
-                                        login({
-                                            variables: {
-                                                username: this.state.username,
-                                                password: this.state.password,
-                                            },
-                                        });
-                                    }}
-                                    fullWidth
-                                >
-                                    GraphQL Submit
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className={classes.cancel}
                                     onClick={() => this.props.history.goBack()}
                                     fullWidth
                                 >
                                     Cancel
                                 </Button>
-                                {data && (() => localStorage.setItem('token', data.login.token))()}
-                                {data && <Redirect to="/" />}
+                                {data &&
+                                    !data.login.responseError &&
+                                    (() => localStorage.setItem('token', data.login.token))()}
+                                {data && !data.login.responseError && <Redirect to="/" />}
                             </form>
                         </Paper>
                     </div>
