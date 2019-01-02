@@ -12,13 +12,19 @@ export const typeDefs = `
 		user: User
         token: String
         responseError: Boolean
-    }
+	}
+	type LoginResponse {
+		user: User
+		token: String
+		responseError: Boolean!
+	}
     type Query {
         user(username: String): User
         users: [User]
     }
     type Mutation {
         register(username: String!, password: String!, email: String!, firstName: String!, lastName: String!): UserResponse
+        login(username: String!, password: String!): LoginResponse
     }
 `;
 
@@ -36,5 +42,7 @@ export const resolvers = {
                 args.firstName,
                 args.lastName
             ),
+        login: async (_: {}, args: any) =>
+            await authentication.loginUser(args.username, args.password),
     },
 };

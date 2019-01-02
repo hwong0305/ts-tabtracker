@@ -117,4 +117,33 @@ export default {
             };
         }
     },
+    async loginUser(username: string, password: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne({ where: { username } });
+            if (user) {
+                const isPasswordValid: boolean = await comparePassword(password, user.password);
+                if (isPasswordValid) {
+                    return {
+                        user,
+                        token: createToken(JSON.parse(JSON.stringify(user))),
+                        responseError: false,
+                    };
+                } else {
+                    return {
+                        responseError: true,
+                    };
+                }
+            } else {
+                return {
+                    responseError: true,
+                };
+            }
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
+        }
+    },
 };
