@@ -4,17 +4,31 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import { CssBaseline, Theme } from '@material-ui/core';
-
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
+import { Redirect } from 'react-router-dom';
 
 import { LoginForm } from '../interfaces';
 import { History } from 'history';
 
 import authenticationService from '../services/authenticationService';
+
+const LOGIN = gql`
+    mutation login($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+            user {
+                firstName
+                lastName
+                email
+            }
+            token
+        }
+    }
+`;
 
 interface Props extends WithStyles<typeof styles> {
     history: History;
@@ -107,63 +121,86 @@ class Login extends React.PureComponent<Props, LoginForm> {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.main}>
-                <CssBaseline />
-                <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Login
-                    </Typography>
-                    {this.state.formError ? (
-                        <h6 className={classes.error}>Invalid Login Crediential</h6>
-                    ) : null}
-                    <form>
-                        <TextField
-                            label="Username"
-                            name="username"
-                            value={this.state.username}
-                            onChange={this.handleChange}
-                            helperText={this.state.usernameError}
-                            error={this.state.usernameError ? true : false}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            label="Password"
-                            type="password"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            helperText={this.state.passwordError}
-                            error={this.state.passwordError ? true : false}
-                            required
-                            fullWidth
-                        />
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick={this.handleSubmit}
-                            disabled={
-                                this.state.usernameError || this.state.passwordError ? true : false
-                            }
-                            fullWidth
-                        >
-                            Login
-                        </Button>
-                        <Button
-                            variant="contained"
-                            className={classes.cancel}
-                            onClick={() => this.props.history.goBack()}
-                            fullWidth
-                        >
-                            Cancel
-                        </Button>
-                    </form>
-                </Paper>
-            </div>
+            <Mutation mutation={LOGIN}>
+                {(login, { data }) => (
+                    <div className={classes.main}>
+                        <CssBaseline />
+                        <Paper className={classes.paper}>
+                            <Avatar className={classes.avatar}>
+                                <LockIcon />
+                            </Avatar>
+                            <Typography component="h1" variant="h5">
+                                Login
+                            </Typography>
+                            {this.state.formError ? (
+                                <h6 className={classes.error}>Invalid Login Crediential</h6>
+                            ) : null}
+                            <form>
+                                <TextField
+                                    label="Username"
+                                    name="username"
+                                    value={this.state.username}
+                                    onChange={this.handleChange}
+                                    helperText={this.state.usernameError}
+                                    error={this.state.usernameError ? true : false}
+                                    required
+                                    fullWidth
+                                />
+                                <TextField
+                                    label="Password"
+                                    type="password"
+                                    name="password"
+                                    value={this.state.password}
+                                    onChange={this.handleChange}
+                                    helperText={this.state.passwordError}
+                                    error={this.state.passwordError ? true : false}
+                                    required
+                                    fullWidth
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                    onClick={this.handleSubmit}
+                                    disabled={
+                                        this.state.usernameError || this.state.passwordError
+                                            ? true
+                                            : false
+                                    }
+                                    fullWidth
+                                >
+                                    Login
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className={classes.cancel}
+                                    onClick={() => {
+                                        login({
+                                            variables: {
+                                                username: this.state.username,
+                                                password: this.state.password,
+                                            },
+                                        });
+                                    }}
+                                    fullWidth
+                                >
+                                    GraphQL Submit
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    className={classes.cancel}
+                                    onClick={() => this.props.history.goBack()}
+                                    fullWidth
+                                >
+                                    Cancel
+                                </Button>
+                                {data && (() => localStorage.setItem('token', data.login.token))()}
+                                {data && <Redirect to="/" />}
+                            </form>
+                        </Paper>
+                    </div>
+                )}
+            </Mutation>
         );
     }
 }
