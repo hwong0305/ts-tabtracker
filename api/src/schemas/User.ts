@@ -18,23 +18,16 @@ export const typeDefs = `
 		token: String
 		responseError: Boolean!
 	}
-    type Query {
-        user(username: String): User
-        users: [User]
-    }
-    type Mutation {
-        register(username: String!, password: String!, email: String!, firstName: String!, lastName: String!): UserResponse
-        login(username: String!, password: String!): LoginResponse
-    }
 `;
 
 export const resolvers = {
     Query: {
-        user: async (_: {}, args: any) => await authentication.fetchUser(args.username),
+        user: async (_: {}, args: { [key: string]: string }) =>
+            await authentication.fetchUser(args.username),
         users: async () => await authentication.fetchUsers(),
     },
     Mutation: {
-        register: async (_: {}, args: any) =>
+        register: async (_: {}, args: { [key: string]: string }) =>
             await authentication.registerUser(
                 args.username,
                 args.password,
