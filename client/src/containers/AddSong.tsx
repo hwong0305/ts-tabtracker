@@ -33,6 +33,17 @@ const ADD_SONG = gql`
     }
 `;
 
+const SONG_QUERY = gql`
+    {
+        songs {
+            id
+            title
+            artist
+            album
+        }
+    }
+`;
+
 interface props extends WithStyles<typeof styles> {
     history: History;
 }
@@ -71,6 +82,9 @@ const styles = (theme: Theme) =>
         error: {
             color: 'red',
         },
+        cancel: {
+            marginTop: theme.spacing.unit,
+        },
     });
 
 class AddSong extends React.Component<props, SongForm> {
@@ -98,7 +112,17 @@ class AddSong extends React.Component<props, SongForm> {
     render() {
         const { classes } = this.props;
         return (
-            <Mutation mutation={ADD_SONG}>
+            <Mutation
+                mutation={ADD_SONG}
+                update={(cache, { data }) => {
+                    const songQuery: { songs: any } | null = cache.readQuery({ query: SONG_QUERY });
+                    const songs = songQuery && songQuery.songs;
+                    cache.writeQuery({
+                        query: SONG_QUERY,
+                        data: { songs: songs.concat([data.createSong]) },
+                    });
+                }}
+            >
                 {(createSong, { data }) => (
                     <div className={classes.root}>
                         <Paper className={classes.paper}>
@@ -169,6 +193,13 @@ class AddSong extends React.Component<props, SongForm> {
                                 }}
                             >
                                 Add Song
+                            </Button>
+                            <Button
+                                variant="contained"
+                                className={classes.cancel}
+                                onClick={() => this.props.history.goBack()}
+                            >
+                                Cancel
                             </Button>
                         </Paper>
                         {data &&

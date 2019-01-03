@@ -41,15 +41,20 @@ const LogoutButton: React.SFC<{}> = () => (
     <UserContext.Consumer>
         {context =>
             context && (
-                <Button
-                    color="inherit"
-                    onClick={() => {
-                        context.state.logout();
-                        console.log(context.state.loggedIn);
-                    }}
-                >
-                    Logout
-                </Button>
+                <React.Fragment>
+                    <Button color="inherit" component={BrowseLink}>
+                        Browse
+                    </Button>
+                    <Button
+                        color="inherit"
+                        onClick={() => {
+                            context.state.logout();
+                            console.log(context.state.loggedIn);
+                        }}
+                    >
+                        Logout
+                    </Button>
+                </React.Fragment>
             )
         }
     </UserContext.Consumer>

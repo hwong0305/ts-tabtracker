@@ -4,6 +4,7 @@ import createToken from './utilities/createToken';
 import hashPassword from './utilities/hashPassword';
 import comparePassword from './utilities/comparePassword';
 import { getConnection } from 'typeorm';
+import { validate } from 'class-validator';
 
 // something wong
 export default {
@@ -43,10 +44,17 @@ export default {
             user.email = email;
             user.firstName = firstName;
             user.lastName = lastName;
-            await getConnection()
-                .getRepository(User)
-                .save(user);
 
+            const error = await validate(user);
+            if (error.length > 0) {
+                await getConnection()
+                    .getRepository(User)
+                    .save(user);
+            } else {
+                return {
+                    responseError: true,
+                };
+            }
             const userResponse = {
                 user,
                 token: createToken(JSON.parse(JSON.stringify(user))),
