@@ -1,5 +1,7 @@
 import song from '../controllers/song';
-export const typeDefs = `
+import gql from 'graphql-tag';
+
+export const typeDefs = gql`
     type Song {
         id: Int
         title: String!

@@ -1,5 +1,6 @@
 import { Song } from '../entity/Song';
 import { getConnection } from 'typeorm';
+import { validate } from 'class-validator';
 
 export default {
     async create(
@@ -16,6 +17,14 @@ export default {
             song.album = album;
             song.albumImg = albumImg;
             song.youtubeID = youtubeID;
+
+            const error = await validate(song);
+
+            if (error.length > 0) {
+                return {
+                    responseError: true,
+                };
+            }
 
             await getConnection()
                 .getRepository(Song)

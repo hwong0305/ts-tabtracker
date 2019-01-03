@@ -1,5 +1,7 @@
 import authentication from '../controllers/authentication';
-export const typeDefs = `
+import gql from 'graphql-tag';
+
+export const typeDefs = gql`
     type User {
         id: ID!
         username: String!
@@ -9,15 +11,15 @@ export const typeDefs = `
         email: String
     }
     type UserResponse {
-		user: User
+        user: User
         token: String
         responseError: Boolean
-	}
-	type LoginResponse {
-		user: User
-		token: String
-		responseError: Boolean!
-	}
+    }
+    type LoginResponse {
+        user: User
+        token: String
+        responseError: Boolean!
+    }
 `;
 
 export const resolvers = {
