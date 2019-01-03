@@ -3,13 +3,18 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import 'reflect-metadata'; // Necessary for TypeORM
 import { createConnection } from 'typeorm';
+import { ApolloServer } from 'apollo-server-express';
 
 import Router from './router';
+import { schema } from './schemas/schema';
 
 const app = express();
 app.use(bodyParser.json());
 // For development only
 app.use(cors());
+
+const server = new ApolloServer({ schema });
+server.applyMiddleware({ app });
 
 // Getting routes from separate file
 app.use('/', Router);

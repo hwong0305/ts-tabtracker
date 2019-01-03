@@ -8,7 +8,6 @@ Router.get('/', (_, res) => {
     res.send({ message: 'Welcome to the beginning of nothingless' });
 });
 
-Router.get('/users', authentication.getUsers);
 Router.post('/register', authPolicy.register, authentication.register);
 Router.post('/login', authentication.login);
 

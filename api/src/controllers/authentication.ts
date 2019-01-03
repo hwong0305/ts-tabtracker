@@ -5,6 +5,7 @@ import hashPassword from './utilities/hashPassword';
 import comparePassword from './utilities/comparePassword';
 import { getConnection } from 'typeorm';
 
+// something wong
 export default {
     async register(req: Request, res: Response) {
         try {
@@ -26,6 +27,38 @@ export default {
             res.status(500).send({
                 error: err,
             });
+        }
+    },
+    async registerUser(
+        username: string,
+        password: string,
+        email: string,
+        firstName: string,
+        lastName: string
+    ) {
+        try {
+            const user = new User();
+            user.username = username;
+            user.password = await hashPassword(password);
+            user.email = email;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            await getConnection()
+                .getRepository(User)
+                .save(user);
+
+            const userResponse = {
+                user,
+                token: createToken(JSON.parse(JSON.stringify(user))),
+                responseError: false,
+            };
+
+            return userResponse;
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
         }
     },
     async login(req: Request, res: Response) {
@@ -54,15 +87,53 @@ export default {
             });
         }
     },
-    async getUsers(_: Request, res: Response) {
+    async loginUser(username: string, password: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne({ where: { username } });
+            if (user) {
+                const isPasswordValid: boolean = await comparePassword(password, user.password);
+                if (isPasswordValid) {
+                    return {
+                        user,
+                        token: createToken(JSON.parse(JSON.stringify(user))),
+                        responseError: false,
+                    };
+                } else {
+                    return {
+                        responseError: true,
+                    };
+                }
+            } else {
+                return {
+                    responseError: true,
+                };
+            }
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
+        }
+    },
+    async fetchUsers() {
         try {
             const userRepository = await getConnection().getRepository(User);
             const users = await userRepository.find();
-            res.json(users);
+            return users;
         } catch (err) {
-            res.status(500).send({
-                err: 'Internal Error',
-            });
+            console.log(err);
+            return null;
+        }
+    },
+    async fetchUser(username: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne({ username });
+            return user;
+        } catch (err) {
+            console.log(err);
+            return null;
         }
     },
 };
