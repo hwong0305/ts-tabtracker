@@ -32,3 +32,11 @@ export interface RegisterForm {
     lastName: string;
     lastNameError: string;
 }
+
+export interface SongForm {
+    title: string;
+    album: string;
+    artist: string;
+    youtubeID: string;
+    albumImg: string;
+}

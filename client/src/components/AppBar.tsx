@@ -19,11 +19,15 @@ const styles = createStyles({
     },
 });
 
-const LoginLink: React.SFC<any> = props => <Link to="/login" {...props} />;
-const RegisterLink: React.SFC<any> = props => <Link to="/register" {...props} />;
+const LoginLink: React.SFC<{}> = props => <Link to="/login" {...props} />;
+const RegisterLink: React.SFC<{}> = props => <Link to="/register" {...props} />;
+const BrowseLink: React.SFC<{}> = props => <Link to="/song" {...props} />;
 
 const LoginButton: React.SFC<{}> = () => (
     <React.Fragment>
+        <Button color="inherit" component={BrowseLink}>
+            Browse
+        </Button>
         <Button color="inherit" component={LoginLink}>
             Login
         </Button>
@@ -37,15 +41,20 @@ const LogoutButton: React.SFC<{}> = () => (
     <UserContext.Consumer>
         {context =>
             context && (
-                <Button
-                    color="inherit"
-                    onClick={() => {
-                        context.state.logout();
-                        console.log(context.state.loggedIn);
-                    }}
-                >
-                    Logout
-                </Button>
+                <React.Fragment>
+                    <Button color="inherit" component={BrowseLink}>
+                        Browse
+                    </Button>
+                    <Button
+                        color="inherit"
+                        onClick={() => {
+                            context.state.logout();
+                            console.log(context.state.loggedIn);
+                        }}
+                    >
+                        Logout
+                    </Button>
+                </React.Fragment>
             )
         }
     </UserContext.Consumer>

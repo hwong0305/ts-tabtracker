@@ -3,15 +3,18 @@ import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import LockIcon from '@material-ui/icons/LockOutlined';
-import authenticationService from '../services/authenticationService';
 import { Theme, CssBaseline } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { History } from 'history';
+import { Mutation } from 'react-apollo';
+import { Redirect } from 'react-router-dom';
 
 import { RegisterForm } from '../interfaces';
+
+import { REGISTER } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
     history: History;
@@ -78,7 +81,7 @@ class Register extends React.Component<Props, RegisterForm> {
         this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
 
-    handleSubmit = () => {
+    handleSubmit = (register: Function) => {
         const { username, email, password, firstName, lastName } = this.state;
         if (
             username.length === 0 ||
@@ -149,125 +152,119 @@ class Register extends React.Component<Props, RegisterForm> {
                 );
             }
         } else {
-            authenticationService
-                .register({ username, email, password, firstName, lastName })
-                .then(response => {
-                    if (response !== 'error') {
-                        localStorage.setItem('token', response.token);
-                        this.props.history.push('/');
-                    } else {
-                        this.setState({
-                            formError: true,
-                        });
-                        setTimeout(
-                            () =>
-                                this.setState({
-                                    formError: false,
-                                }),
-                            10000
-                        );
-                    }
-                })
-                .catch(err => {
-                    console.log('In Error');
-                    console.log(err);
-                });
+            register({
+                variables: {
+                    username: this.state.username,
+                    password: this.state.password,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                },
+            });
         }
     };
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.main}>
-                <CssBaseline />
-                <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Register
-                    </Typography>
-                    {this.state.formError ? (
-                        <h6 className={classes.error}>Invalid Registration Information</h6>
-                    ) : null}
-                    <TextField
-                        label="Username"
-                        name="username"
-                        onChange={this.handleChange}
-                        value={this.state.username}
-                        error={this.state.usernameError ? true : false}
-                        helperText={this.state.usernameError}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        name="password"
-                        type="password"
-                        label="Password"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        error={this.state.passwordError ? true : false}
-                        helperText={this.state.passwordError}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        label="First Name"
-                        name="firstName"
-                        onChange={this.handleChange}
-                        value={this.state.firstName}
-                        error={this.state.firstNameError ? true : false}
-                        helperText={this.state.firstNameError}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        label="Last Name"
-                        name="lastName"
-                        onChange={this.handleChange}
-                        value={this.state.lastName}
-                        error={this.state.lastNameError ? true : false}
-                        helperText={this.state.lastNameError}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        onChange={this.handleChange}
-                        value={this.state.email}
-                        error={this.state.emailError ? true : false}
-                        helperText={this.state.emailError}
-                        required
-                        fullWidth
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={this.handleSubmit}
-                        disabled={
-                            this.state.usernameError ||
-                            this.state.passwordError ||
-                            this.state.emailError ||
-                            this.state.firstNameError ||
-                            this.state.lastNameError
-                                ? true
-                                : false
-                        }
-                        fullWidth
-                    >
-                        Submit
-                    </Button>
-                    <Button
-                        variant="contained"
-                        className={classes.cancel}
-                        onClick={() => this.props.history.goBack()}
-                        fullWidth
-                    >
-                        Cancel
-                    </Button>
-                </Paper>
-            </div>
+            <Mutation mutation={REGISTER}>
+                {(register, { data }) => (
+                    <div className={classes.main}>
+                        <CssBaseline />
+                        <Paper className={classes.paper}>
+                            <Avatar className={classes.avatar}>
+                                <LockIcon />
+                            </Avatar>
+                            <Typography component="h1" variant="h5">
+                                Register
+                            </Typography>
+                            {data && data.register.responseError ? (
+                                <h6 className={classes.error}>Invalid Registration Information</h6>
+                            ) : null}
+                            <TextField
+                                label="Username"
+                                name="username"
+                                onChange={this.handleChange}
+                                value={this.state.username}
+                                error={this.state.usernameError ? true : false}
+                                helperText={this.state.usernameError}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                name="password"
+                                type="password"
+                                label="Password"
+                                onChange={this.handleChange}
+                                value={this.state.password}
+                                error={this.state.passwordError ? true : false}
+                                helperText={this.state.passwordError}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="First Name"
+                                name="firstName"
+                                onChange={this.handleChange}
+                                value={this.state.firstName}
+                                error={this.state.firstNameError ? true : false}
+                                helperText={this.state.firstNameError}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="Last Name"
+                                name="lastName"
+                                onChange={this.handleChange}
+                                value={this.state.lastName}
+                                error={this.state.lastNameError ? true : false}
+                                helperText={this.state.lastNameError}
+                                required
+                                fullWidth
+                            />
+                            <TextField
+                                label="Email"
+                                name="email"
+                                onChange={this.handleChange}
+                                value={this.state.email}
+                                error={this.state.emailError ? true : false}
+                                helperText={this.state.emailError}
+                                required
+                                fullWidth
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                onClick={() => this.handleSubmit(register)}
+                                disabled={
+                                    this.state.usernameError ||
+                                    this.state.passwordError ||
+                                    this.state.emailError ||
+                                    this.state.firstNameError ||
+                                    this.state.lastNameError
+                                        ? true
+                                        : false
+                                }
+                                fullWidth
+                            >
+                                Register
+                            </Button>
+                            <Button
+                                variant="contained"
+                                className={classes.cancel}
+                                onClick={() => this.props.history.goBack()}
+                                fullWidth
+                            >
+                                Cancel
+                            </Button>
+                        </Paper>
+                        {data &&
+                            !data.register.responseError &&
+                            localStorage.setItem('token', data.register.token)}
+                        {data && !data.register.responseError && <Redirect to="/" />}
+                    </div>
+                )}
+            </Mutation>
         );
     }
 }
