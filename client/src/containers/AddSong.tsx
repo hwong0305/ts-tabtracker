@@ -11,38 +11,7 @@ import { History } from 'history';
 import { SongForm } from '../interfaces';
 
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-
-const ADD_SONG = gql`
-    mutation createSong(
-        $title: String!
-        $artist: String!
-        $album: String!
-        $albumImg: String!
-        $youtubeID: String!
-    ) {
-        createSong(
-            title: $title
-            artist: $artist
-            album: $album
-            albumImg: $albumImg
-            youtubeID: $youtubeID
-        ) {
-            responseError
-        }
-    }
-`;
-
-const SONG_QUERY = gql`
-    {
-        songs {
-            id
-            title
-            artist
-            album
-        }
-    }
-`;
+import { ADD_SONG, SONG_QUERY } from '../queries/queries';
 
 interface props extends WithStyles<typeof styles> {
     history: History;

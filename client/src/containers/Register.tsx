@@ -10,31 +10,11 @@ import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { History } from 'history';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Redirect } from 'react-router-dom';
 
 import { RegisterForm } from '../interfaces';
 
-const REGISTER = gql`
-    mutation register(
-        $username: String!
-        $password: String!
-        $firstName: String!
-        $lastName: String!
-        $email: String!
-    ) {
-        register(
-            username: $username
-            password: $password
-            firstName: $firstName
-            lastName: $lastName
-            email: $email
-        ) {
-            token
-            responseError
-        }
-    }
-`;
+import { REGISTER } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
     history: History;

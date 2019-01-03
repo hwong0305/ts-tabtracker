@@ -12,10 +12,11 @@ import TableRow from '@material-ui/core/TableRow';
 import ToolBar from '@material-ui/core/Toolbar';
 
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import { Link } from 'react-router-dom';
 
 import MyAppBar from '../components/AppBar';
+
+import { SONG_QUERY } from '../queries/queries';
 
 interface SongInterface {
     id: number;
@@ -23,17 +24,6 @@ interface SongInterface {
     artist: string;
     album: string;
 }
-
-const SONG_QUERY = gql`
-    {
-        songs {
-            id
-            title
-            artist
-            album
-        }
-    }
-`;
 
 const styles = (theme: Theme) =>
     createStyles({

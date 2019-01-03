@@ -8,26 +8,13 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 
 import { LoginForm } from '../interfaces';
 import { History } from 'history';
 
-const LOGIN = gql`
-    mutation login($username: String!, $password: String!) {
-        login(username: $username, password: $password) {
-            user {
-                firstName
-                lastName
-                email
-            }
-            token
-            responseError
-        }
-    }
-`;
+import { LOGIN } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
     history: History;
