@@ -10,6 +10,29 @@ import { withStyles } from '@material-ui/core/styles';
 import { History } from 'history';
 import { SongForm } from '../interfaces';
 
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const ADD_SONG = gql`
+    mutation createSong(
+        $title: String!
+        $artist: String!
+        $album: String!
+        $albumImg: String!
+        $youtubeID: String!
+    ) {
+        createSong(
+            title: $title
+            artist: $artist
+            album: $album
+            albumImg: $albumImg
+            youtubeID: $youtubeID
+        ) {
+            responseError
+        }
+    }
+`;
+
 interface props extends WithStyles<typeof styles> {
     history: History;
 }
@@ -45,6 +68,9 @@ const styles = (theme: Theme) =>
         form: {
             marginTop: theme.spacing.unit * 3,
         },
+        error: {
+            color: 'red',
+        },
     });
 
 class AddSong extends React.Component<props, SongForm> {
@@ -72,64 +98,85 @@ class AddSong extends React.Component<props, SongForm> {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LibraryAdd />
-                    </Avatar>
-                    <Typography component="h1" variant="h6" className={classes.typography}>
-                        Songs
-                    </Typography>
-                    <TextField
-                        placeholder="Title"
-                        className={classes.form}
-                        name="title"
-                        value={this.state.title}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        placeholder="Artist"
-                        className={classes.form}
-                        name="artist"
-                        value={this.state.artist}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        placeholder="Album"
-                        className={classes.form}
-                        name="album"
-                        value={this.state.album}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        placeholder="Album Image"
-                        className={classes.form}
-                        name="albumImg"
-                        value={this.state.albumImg}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <TextField
-                        placeholder="Youtube ID"
-                        className={classes.form}
-                        name="youtubeID"
-                        value={this.state.youtubeID}
-                        onChange={this.handleChange}
-                        fullWidth
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={() => this.props.history.push('/')}
-                    >
-                        Add Song
-                    </Button>
-                </Paper>
-            </div>
+            <Mutation mutation={ADD_SONG}>
+                {(createSong, { data }) => (
+                    <div className={classes.root}>
+                        <Paper className={classes.paper}>
+                            <Avatar className={classes.avatar}>
+                                <LibraryAdd />
+                            </Avatar>
+                            <Typography component="h1" variant="h6" className={classes.typography}>
+                                Songs
+                            </Typography>
+                            {data && data.createSong.responseError && (
+                                <h6 className={classes.error}>Please fill in all fields</h6>
+                            )}
+                            <TextField
+                                placeholder="Title"
+                                className={classes.form}
+                                name="title"
+                                value={this.state.title}
+                                onChange={this.handleChange}
+                                fullWidth
+                            />
+                            <TextField
+                                placeholder="Artist"
+                                className={classes.form}
+                                name="artist"
+                                value={this.state.artist}
+                                onChange={this.handleChange}
+                                fullWidth
+                            />
+                            <TextField
+                                placeholder="Album"
+                                className={classes.form}
+                                name="album"
+                                value={this.state.album}
+                                onChange={this.handleChange}
+                                fullWidth
+                            />
+                            <TextField
+                                placeholder="Album Image"
+                                className={classes.form}
+                                name="albumImg"
+                                value={this.state.albumImg}
+                                onChange={this.handleChange}
+                                fullWidth
+                            />
+                            <TextField
+                                placeholder="Youtube ID"
+                                className={classes.form}
+                                name="youtubeID"
+                                value={this.state.youtubeID}
+                                onChange={this.handleChange}
+                                fullWidth
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                onClick={() => {
+                                    console.log(this.state.title);
+                                    createSong({
+                                        variables: {
+                                            title: this.state.title,
+                                            artist: this.state.artist,
+                                            album: this.state.album,
+                                            albumImg: this.state.albumImg,
+                                            youtubeID: this.state.youtubeID,
+                                        },
+                                    });
+                                }}
+                            >
+                                Add Song
+                            </Button>
+                        </Paper>
+                        {data &&
+                            !data.createSong.responseError &&
+                            (() => this.props.history.push('/'))()}
+                    </div>
+                )}
+            </Mutation>
         );
     }
 }
