@@ -8,6 +8,7 @@ import './index.css';
 import App from './App';
 import Login from './containers/Login';
 import Register from './containers/Register';
+import Song from './containers/Song';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -60,6 +61,7 @@ ReactDOM.render(
                     <Route exact path="/" component={App} />
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
+                    <Route path="/song" component={Song} />
                 </React.Fragment>
             </Router>
         </UserProvider>
