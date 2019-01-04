@@ -46,7 +46,7 @@ const styles = (theme: Theme) =>
             textAlign: 'center',
         },
         form: {
-            marginTop: theme.spacing.unit * 3,
+            marginTop: theme.spacing.unit,
         },
         error: {
             color: 'red',
@@ -182,41 +182,37 @@ class AddSong extends React.Component<props, SongForm> {
                                 <h6 className={classes.error}>Please fill in all fields</h6>
                             )}
                             <TextField
-                                placeholder="Title"
-                                className={classes.form}
+                                label="Title"
                                 name="title"
                                 value={this.state.title}
                                 onChange={this.handleChange}
                                 error={this.state.titleError}
                                 helperText={this.state.titleError && 'Please enter a Title'}
-                                required
                                 fullWidth
+                                required
                             />
                             <TextField
-                                placeholder="Artist"
-                                className={classes.form}
+                                label="Artist"
                                 name="artist"
                                 value={this.state.artist}
                                 onChange={this.handleChange}
                                 error={this.state.artistError}
                                 helperText={this.state.artistError && 'Please enter an Artist'}
-                                required
                                 fullWidth
+                                required
                             />
                             <TextField
-                                placeholder="Album"
-                                className={classes.form}
+                                label="Album"
                                 name="album"
                                 value={this.state.album}
                                 onChange={this.handleChange}
                                 error={this.state.albumError}
                                 helperText={this.state.albumError && 'Please enter an Album'}
-                                required
                                 fullWidth
+                                required
                             />
                             <TextField
-                                placeholder="Album Image"
-                                className={classes.form}
+                                label="Album Image"
                                 name="albumImg"
                                 value={this.state.albumImg}
                                 onChange={this.handleChange}
@@ -224,12 +220,11 @@ class AddSong extends React.Component<props, SongForm> {
                                 helperText={
                                     this.state.albumImgError && 'Please enter an Album Image URL'
                                 }
-                                required
                                 fullWidth
+                                required
                             />
                             <TextField
-                                placeholder="Youtube ID"
-                                className={classes.form}
+                                label="Youtube ID"
                                 name="youtubeID"
                                 value={this.state.youtubeID}
                                 onChange={this.handleChange}
@@ -237,8 +232,8 @@ class AddSong extends React.Component<props, SongForm> {
                                 helperText={
                                     this.state.youtubeIDError && 'Please enter a Youtube Video ID'
                                 }
-                                required
                                 fullWidth
+                                required
                             />
                             <Button
                                 variant="contained"

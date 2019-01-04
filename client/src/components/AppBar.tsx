@@ -68,7 +68,7 @@ class MyAppBar extends React.Component<WithStyles<typeof styles>, {}> {
                 {context =>
                     context && (
                         <div className={classes.root}>
-                            <AppBar position="static" color="primary">
+                            <AppBar position="fixed" color="primary">
                                 <Toolbar>
                                     <Typography
                                         variant="h6"
