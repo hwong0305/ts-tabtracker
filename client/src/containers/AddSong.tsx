@@ -62,22 +62,99 @@ class AddSong extends React.Component<props, SongForm> {
 
         this.state = {
             title: '',
+            titleError: false,
             artist: '',
+            artistError: false,
             album: '',
+            albumError: false,
             albumImg: '',
+            albumImgError: false,
             youtubeID: '',
+            youtubeIDError: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-    handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
         this.setState({
             ...this.state,
             [name]: value,
+            [name + 'Error']: false,
         });
-    }
+    };
+    handleSubmit = (addSong: Function) => {
+        if (
+            this.state.title.length === 0 ||
+            this.state.artist.length === 0 ||
+            this.state.album.length === 0 ||
+            this.state.albumImg.length === 0 ||
+            this.state.youtubeID.length === 0
+        ) {
+            if (this.state.title.length === 0) {
+                this.setState({ titleError: true });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            titleError: false,
+                        }),
+                    10000
+                );
+            }
+            if (this.state.artist.length === 0) {
+                this.setState({ artistError: true });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            artistError: false,
+                        }),
+                    10000
+                );
+            }
+            if (this.state.album.length === 0) {
+                this.setState({ albumError: true });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            albumError: false,
+                        }),
+                    10000
+                );
+            }
+            if (this.state.albumImg.length === 0) {
+                this.setState({ albumImgError: true });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            albumImgError: false,
+                        }),
+                    10000
+                );
+            }
+            if (this.state.youtubeID.length === 0) {
+                this.setState({ youtubeIDError: true });
+                setTimeout(
+                    () =>
+                        this.setState({
+                            youtubeIDError: false,
+                        }),
+                    10000
+                );
+            }
+        } else {
+            addSong({
+                variables: {
+                    title: this.state.title,
+                    artist: this.state.artist,
+                    album: this.state.album,
+                    albumImg: this.state.albumImg,
+                    youtubeID: this.state.youtubeID,
+                },
+            });
+        }
+    };
     render() {
         const { classes } = this.props;
         return (
@@ -110,6 +187,9 @@ class AddSong extends React.Component<props, SongForm> {
                                 name="title"
                                 value={this.state.title}
                                 onChange={this.handleChange}
+                                error={this.state.titleError}
+                                helperText={this.state.titleError && 'Please enter a Title'}
+                                required
                                 fullWidth
                             />
                             <TextField
@@ -118,6 +198,9 @@ class AddSong extends React.Component<props, SongForm> {
                                 name="artist"
                                 value={this.state.artist}
                                 onChange={this.handleChange}
+                                error={this.state.artistError}
+                                helperText={this.state.artistError && 'Please enter an Artist'}
+                                required
                                 fullWidth
                             />
                             <TextField
@@ -126,6 +209,9 @@ class AddSong extends React.Component<props, SongForm> {
                                 name="album"
                                 value={this.state.album}
                                 onChange={this.handleChange}
+                                error={this.state.albumError}
+                                helperText={this.state.albumError && 'Please enter an Album'}
+                                required
                                 fullWidth
                             />
                             <TextField
@@ -134,6 +220,11 @@ class AddSong extends React.Component<props, SongForm> {
                                 name="albumImg"
                                 value={this.state.albumImg}
                                 onChange={this.handleChange}
+                                error={this.state.albumImgError}
+                                helperText={
+                                    this.state.albumImgError && 'Please enter an Album Image URL'
+                                }
+                                required
                                 fullWidth
                             />
                             <TextField
@@ -142,24 +233,18 @@ class AddSong extends React.Component<props, SongForm> {
                                 name="youtubeID"
                                 value={this.state.youtubeID}
                                 onChange={this.handleChange}
+                                error={this.state.youtubeIDError}
+                                helperText={
+                                    this.state.youtubeIDError && 'Please enter a Youtube Video ID'
+                                }
+                                required
                                 fullWidth
                             />
                             <Button
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
-                                onClick={() => {
-                                    console.log(this.state.title);
-                                    createSong({
-                                        variables: {
-                                            title: this.state.title,
-                                            artist: this.state.artist,
-                                            album: this.state.album,
-                                            albumImg: this.state.albumImg,
-                                            youtubeID: this.state.youtubeID,
-                                        },
-                                    });
-                                }}
+                                onClick={() => this.handleSubmit(createSong)}
                             >
                                 Add Song
                             </Button>

@@ -35,8 +35,13 @@ export interface RegisterForm {
 
 export interface SongForm {
     title: string;
+    titleError: boolean;
     album: string;
+    albumError: boolean;
     artist: string;
+    artistError: boolean;
     youtubeID: string;
+    youtubeIDError: boolean;
     albumImg: string;
+    albumImgError: boolean;
 }
