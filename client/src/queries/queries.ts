@@ -65,3 +65,15 @@ export const ADD_SONG = gql`
         }
     }
 `;
+
+export const SONG = gql`
+    query song($id: Int) {
+        findSong(id: $id) {
+            song {
+                artist
+                title
+                album
+            }
+        }
+    }
+`;

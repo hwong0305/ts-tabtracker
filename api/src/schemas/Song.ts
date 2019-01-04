@@ -17,6 +17,7 @@ export const typeDefs = gql`
 
 export const resolvers = {
     Query: {
+        findSong: async (_: {}, args: { id: number }) => await song.findSong(args.id),
         songs: async () => await song.getSongs(),
         filteredSong: async (_: {}, args: { [key: string]: string }) =>
             await song.getFilteredSongs(args.title, args.artist, args.album),

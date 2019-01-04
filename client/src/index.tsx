@@ -3,13 +3,15 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import './App.css';
 import './index.css';
 
 import AddSong from './containers/AddSong';
-import App from './App';
+// import App from './App';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
+import ViewSong from './containers/ViewSong';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -29,8 +31,8 @@ export const UserContext = React.createContext<UserContextInterface | null>(null
 
 export class UserProvider extends React.Component {
     state = {
-        loggedIn: false,
-        token: null,
+        loggedIn: localStorage.getItem('token') ? true : false,
+        token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
         logout: () => {
             localStorage.removeItem('token');
             return this.setState({
@@ -59,15 +61,15 @@ ReactDOM.render(
         <UserProvider>
             <Router>
                 <React.Fragment>
-                    <Route exact path="/" component={App} />
+                    {/* <Route exact path="/" component={App} /> */}
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
-                    <Route path="/song" component={Song} />
+                    <Route exact path="/" component={Song} />
                     <Route path="/create/song" component={AddSong} />
+                    <Route path="/song/:id" component={ViewSong} />
                 </React.Fragment>
             </Router>
         </UserProvider>
-        >
     </ApolloProvider>,
     document.getElementById('root')
 );

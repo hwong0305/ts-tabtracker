@@ -21,7 +21,7 @@ const styles = createStyles({
 
 const LoginLink: React.SFC<{}> = props => <Link to="/login" {...props} />;
 const RegisterLink: React.SFC<{}> = props => <Link to="/register" {...props} />;
-const BrowseLink: React.SFC<{}> = props => <Link to="/song" {...props} />;
+const BrowseLink: React.SFC<{}> = props => <Link to="/" {...props} />;
 
 const LoginButton: React.SFC<{}> = () => (
     <React.Fragment>
