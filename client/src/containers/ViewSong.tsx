@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { SONG } from '../queries/queries';
-import { Link } from 'react-router-dom';
 import MyAppBar from '../components/AppBar';
 import '../styles/view.css';
 import Button from '@material-ui/core/Button';
@@ -61,16 +60,6 @@ class ViewSong extends React.Component<Props, {}> {
                                         }
                                     }}
                                 </Query>
-                            </header>
-                        )}
-                        {context && !context.state.loggedIn && (
-                            <header className="App-header">
-                                <p>
-                                    Please{' '}
-                                    <Link className="App-link" to="/login">
-                                        Log In
-                                    </Link>
-                                </p>
                             </header>
                         )}
                     </div>

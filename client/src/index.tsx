@@ -7,7 +7,6 @@ import './App.css';
 import './index.css';
 
 import AddSong from './containers/AddSong';
-// import App from './App';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
@@ -61,7 +60,6 @@ ReactDOM.render(
         <UserProvider>
             <Router>
                 <React.Fragment>
-                    {/* <Route exact path="/" component={App} /> */}
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
                     <Route exact path="/" component={Song} />
