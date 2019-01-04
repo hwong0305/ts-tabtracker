@@ -10,6 +10,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Mutation } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
+import { UserContext } from '../index';
 
 import { LoginForm } from '../interfaces';
 import { History } from 'history';
@@ -101,73 +102,81 @@ class Login extends React.PureComponent<Props, LoginForm> {
     render() {
         const { classes } = this.props;
         return (
-            <Mutation mutation={LOGIN}>
-                {(login, { data }) => (
-                    <div className={classes.main}>
-                        <CssBaseline />
-                        <Paper className={classes.paper}>
-                            <Avatar className={classes.avatar}>
-                                <LockIcon />
-                            </Avatar>
-                            <Typography component="h1" variant="h5">
-                                Login
-                            </Typography>
-                            {data && data.login.responseError ? (
-                                <h6 className={classes.error}>Invalid Login Crediential</h6>
-                            ) : null}
-                            <form>
-                                <TextField
-                                    label="Username"
-                                    name="username"
-                                    value={this.state.username}
-                                    onChange={this.handleChange}
-                                    helperText={this.state.usernameError}
-                                    error={this.state.usernameError ? true : false}
-                                    required
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Password"
-                                    type="password"
-                                    name="password"
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    helperText={this.state.passwordError}
-                                    error={this.state.passwordError ? true : false}
-                                    required
-                                    fullWidth
-                                />
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    className={classes.submit}
-                                    onClick={() => this.handleSubmit(login)}
-                                    disabled={
-                                        this.state.usernameError || this.state.passwordError
-                                            ? true
-                                            : false
-                                    }
-                                    fullWidth
-                                >
-                                    Login
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    className={classes.cancel}
-                                    onClick={() => this.props.history.goBack()}
-                                    fullWidth
-                                >
-                                    Cancel
-                                </Button>
-                                {data &&
-                                    !data.login.responseError &&
-                                    (() => localStorage.setItem('token', data.login.token))()}
-                                {data && !data.login.responseError && <Redirect to="/" />}
-                            </form>
-                        </Paper>
-                    </div>
+            <UserContext.Consumer>
+                {context => (
+                    <Mutation mutation={LOGIN}>
+                        {(login, { data }) => (
+                            <div className={classes.main}>
+                                <CssBaseline />
+                                <Paper className={classes.paper}>
+                                    <Avatar className={classes.avatar}>
+                                        <LockIcon />
+                                    </Avatar>
+                                    <Typography component="h1" variant="h5">
+                                        Login
+                                    </Typography>
+                                    {data && data.login.responseError ? (
+                                        <h6 className={classes.error}>Invalid Login Crediential</h6>
+                                    ) : null}
+                                    <form>
+                                        <TextField
+                                            label="Username"
+                                            name="username"
+                                            value={this.state.username}
+                                            onChange={this.handleChange}
+                                            helperText={this.state.usernameError}
+                                            error={this.state.usernameError ? true : false}
+                                            required
+                                            fullWidth
+                                        />
+                                        <TextField
+                                            label="Password"
+                                            type="password"
+                                            name="password"
+                                            value={this.state.password}
+                                            onChange={this.handleChange}
+                                            helperText={this.state.passwordError}
+                                            error={this.state.passwordError ? true : false}
+                                            required
+                                            fullWidth
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            className={classes.submit}
+                                            onClick={() => this.handleSubmit(login)}
+                                            disabled={
+                                                this.state.usernameError || this.state.passwordError
+                                                    ? true
+                                                    : false
+                                            }
+                                            fullWidth
+                                        >
+                                            Login
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className={classes.cancel}
+                                            onClick={() => this.props.history.goBack()}
+                                            fullWidth
+                                        >
+                                            Cancel
+                                        </Button>
+                                        {data &&
+                                            context &&
+                                            !data.login.responseError &&
+                                            (() => {
+                                                localStorage.setItem('token', data.login.token);
+                                                context.state.login('token');
+                                                return <Redirect to="/" />;
+                                            })()}
+                                    </form>
+                                </Paper>
+                            </div>
+                        )}
+                    </Mutation>
                 )}
-            </Mutation>
+            </UserContext.Consumer>
         );
     }
 }
