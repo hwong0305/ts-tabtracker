@@ -84,4 +84,25 @@ export default {
             return null;
         }
     },
+
+    async findSong(id: number) {
+        try {
+            const songRepository = await getConnection().getRepository(Song);
+            const song = songRepository.findOne(id);
+            if (song) {
+                return {
+                    song,
+                    responseError: false,
+                };
+            } else {
+                return {
+                    responseError: true,
+                };
+            }
+        } catch (err) {
+            return {
+                responseError: true,
+            };
+        }
+    },
 };

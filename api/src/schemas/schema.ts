@@ -9,6 +9,7 @@ const typeDefs = gql`
         user(username: String): User
         users: [User]
         filteredSong(title: String, artist: String, album: String): [Song]
+        findSong(id: Int): SongResponse
         songs: [Song]
     }
     type Mutation {
