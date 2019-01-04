@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ToolBar from '@material-ui/core/Toolbar';
 
+import { History } from 'history';
 import { Query } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
@@ -23,6 +24,10 @@ interface SongInterface {
     title: string;
     artist: string;
     album: string;
+}
+
+interface Props extends WithStyles<typeof styles> {
+    history: History;
 }
 
 const styles = (theme: Theme) =>
@@ -47,10 +52,16 @@ const styles = (theme: Theme) =>
         typography: {
             color: '#fff',
         },
+        tableRowHover: {
+            '&:hover': {
+                backgroundColor: theme.palette.grey[200],
+                cursor: 'grab',
+            },
+        },
     });
 const CreateSongLink: React.SFC<{}> = props => <Link to="/create/song" {...props} />;
 
-class Song extends React.Component<WithStyles<typeof styles>, {}> {
+class Song extends React.Component<Props, {}> {
     render() {
         const { classes } = this.props;
         return (
@@ -84,7 +95,15 @@ class Song extends React.Component<WithStyles<typeof styles>, {}> {
                                         </TableHead>
                                         <TableBody>
                                             {data.songs.map((songItem: SongInterface) => (
-                                                <TableRow key={songItem.id}>
+                                                <TableRow
+                                                    key={songItem.id}
+                                                    className={classes.tableRowHover}
+                                                    onClick={() =>
+                                                        this.props.history.push(
+                                                            `/song/${songItem.id}`
+                                                        )
+                                                    }
+                                                >
                                                     <TableCell component="th" scope="song">
                                                         {songItem.title}
                                                     </TableCell>
