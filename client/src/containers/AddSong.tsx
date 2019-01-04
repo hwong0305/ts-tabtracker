@@ -9,9 +9,10 @@ import { createStyles, Theme, WithStyles } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { History } from 'history';
 import { SongForm } from '../interfaces';
-
+import { Redirect } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
 import { ADD_SONG, SONG_QUERY } from '../queries/queries';
+import { UserContext } from '../index';
 
 interface props extends WithStyles<typeof styles> {
     history: History;
@@ -32,7 +33,6 @@ const styles = (theme: Theme) =>
             marginBottom: theme.spacing.unit,
             textAlign: 'center',
         },
-        typography: {},
         button: {
             marginTop: theme.spacing.unit * 3,
         },
@@ -93,56 +93,24 @@ class AddSong extends React.Component<props, SongForm> {
             this.state.albumImg.length === 0 ||
             this.state.youtubeID.length === 0
         ) {
-            if (this.state.title.length === 0) {
-                this.setState({ titleError: true });
-                setTimeout(
-                    () =>
-                        this.setState({
-                            titleError: false,
-                        }),
-                    10000
-                );
-            }
-            if (this.state.artist.length === 0) {
-                this.setState({ artistError: true });
-                setTimeout(
-                    () =>
-                        this.setState({
-                            artistError: false,
-                        }),
-                    10000
-                );
-            }
-            if (this.state.album.length === 0) {
-                this.setState({ albumError: true });
-                setTimeout(
-                    () =>
-                        this.setState({
-                            albumError: false,
-                        }),
-                    10000
-                );
-            }
-            if (this.state.albumImg.length === 0) {
-                this.setState({ albumImgError: true });
-                setTimeout(
-                    () =>
-                        this.setState({
-                            albumImgError: false,
-                        }),
-                    10000
-                );
-            }
-            if (this.state.youtubeID.length === 0) {
-                this.setState({ youtubeIDError: true });
-                setTimeout(
-                    () =>
-                        this.setState({
-                            youtubeIDError: false,
-                        }),
-                    10000
-                );
-            }
+            this.setState({
+                titleError: this.state.title.length === 0,
+                artistError: this.state.artist.length === 0,
+                albumError: this.state.album.length === 0,
+                albumImgError: this.state.albumImg.length === 0,
+                youtubeIDError: this.state.youtubeID.length === 0,
+            });
+            setTimeout(
+                () =>
+                    this.setState({
+                        titleError: false,
+                        artistError: false,
+                        albumError: false,
+                        albumImgError: false,
+                        youtubeIDError: false,
+                    }),
+                10000
+            );
         } else {
             addSong({
                 variables: {
@@ -158,105 +126,124 @@ class AddSong extends React.Component<props, SongForm> {
     render() {
         const { classes } = this.props;
         return (
-            <Mutation
-                mutation={ADD_SONG}
-                update={(cache, { data }) => {
-                    const songQuery: { songs: any } | null = cache.readQuery({ query: SONG_QUERY });
-                    const songs = songQuery && songQuery.songs;
-                    cache.writeQuery({
-                        query: SONG_QUERY,
-                        data: { songs: songs.concat([data.createSong]) },
-                    });
-                }}
-            >
-                {(createSong, { data }) => (
-                    <div className={classes.root}>
-                        <Paper className={classes.paper}>
-                            <Avatar className={classes.avatar}>
-                                <LibraryAdd />
-                            </Avatar>
-                            <Typography component="h1" variant="h6" className={classes.typography}>
-                                Songs
-                            </Typography>
-                            {data && data.createSong.responseError && (
-                                <h6 className={classes.error}>Please fill in all fields</h6>
-                            )}
-                            <TextField
-                                label="Title"
-                                name="title"
-                                value={this.state.title}
-                                onChange={this.handleChange}
-                                error={this.state.titleError}
-                                helperText={this.state.titleError && 'Please enter a Title'}
-                                fullWidth
-                                required
-                            />
-                            <TextField
-                                label="Artist"
-                                name="artist"
-                                value={this.state.artist}
-                                onChange={this.handleChange}
-                                error={this.state.artistError}
-                                helperText={this.state.artistError && 'Please enter an Artist'}
-                                fullWidth
-                                required
-                            />
-                            <TextField
-                                label="Album"
-                                name="album"
-                                value={this.state.album}
-                                onChange={this.handleChange}
-                                error={this.state.albumError}
-                                helperText={this.state.albumError && 'Please enter an Album'}
-                                fullWidth
-                                required
-                            />
-                            <TextField
-                                label="Album Image"
-                                name="albumImg"
-                                value={this.state.albumImg}
-                                onChange={this.handleChange}
-                                error={this.state.albumImgError}
-                                helperText={
-                                    this.state.albumImgError && 'Please enter an Album Image URL'
-                                }
-                                fullWidth
-                                required
-                            />
-                            <TextField
-                                label="Youtube ID"
-                                name="youtubeID"
-                                value={this.state.youtubeID}
-                                onChange={this.handleChange}
-                                error={this.state.youtubeIDError}
-                                helperText={
-                                    this.state.youtubeIDError && 'Please enter a Youtube Video ID'
-                                }
-                                fullWidth
-                                required
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                onClick={() => this.handleSubmit(createSong)}
-                            >
-                                Add Song
-                            </Button>
-                            <Button
-                                variant="contained"
-                                className={classes.cancel}
-                                onClick={() => this.props.history.goBack()}
-                            >
-                                Cancel
-                            </Button>
-                        </Paper>
-                        {data &&
-                            !data.createSong.responseError &&
-                            (() => this.props.history.push('/'))()}
-                    </div>
+            <UserContext.Consumer>
+                {context => (
+                    <Mutation
+                        mutation={ADD_SONG}
+                        update={(cache, { data }) => {
+                            const songQuery: { songs: any } | null = cache.readQuery({
+                                query: SONG_QUERY,
+                            });
+                            const songs = songQuery && songQuery.songs;
+                            cache.writeQuery({
+                                query: SONG_QUERY,
+                                data: { songs: songs.concat([data.createSong]) },
+                            });
+                        }}
+                    >
+                        {(createSong, { data }) => (
+                            <div className={classes.root}>
+                                {context && !context.state.loggedIn && <Redirect to="/login" />}
+                                {context && context.state.loggedIn && (
+                                    <Paper className={classes.paper}>
+                                        <Avatar className={classes.avatar}>
+                                            <LibraryAdd />
+                                        </Avatar>
+                                        <Typography component="h1" variant="h6">
+                                            Songs
+                                        </Typography>
+                                        {data && data.createSong.responseError && (
+                                            <h6 className={classes.error}>
+                                                Please fill in all fields
+                                            </h6>
+                                        )}
+                                        <TextField
+                                            label="Title"
+                                            name="title"
+                                            value={this.state.title}
+                                            onChange={this.handleChange}
+                                            error={this.state.titleError}
+                                            helperText={
+                                                this.state.titleError && 'Please enter a Title'
+                                            }
+                                            fullWidth
+                                            required
+                                        />
+                                        <TextField
+                                            label="Artist"
+                                            name="artist"
+                                            value={this.state.artist}
+                                            onChange={this.handleChange}
+                                            error={this.state.artistError}
+                                            helperText={
+                                                this.state.artistError && 'Please enter an Artist'
+                                            }
+                                            fullWidth
+                                            required
+                                        />
+                                        <TextField
+                                            label="Album"
+                                            name="album"
+                                            value={this.state.album}
+                                            onChange={this.handleChange}
+                                            error={this.state.albumError}
+                                            helperText={
+                                                this.state.albumError && 'Please enter an Album'
+                                            }
+                                            fullWidth
+                                            required
+                                        />
+                                        <TextField
+                                            label="Album Image"
+                                            name="albumImg"
+                                            value={this.state.albumImg}
+                                            onChange={this.handleChange}
+                                            error={this.state.albumImgError}
+                                            helperText={
+                                                this.state.albumImgError &&
+                                                'Please enter an Album Image URL'
+                                            }
+                                            fullWidth
+                                            required
+                                        />
+                                        <TextField
+                                            label="Youtube ID"
+                                            name="youtubeID"
+                                            value={this.state.youtubeID}
+                                            onChange={this.handleChange}
+                                            error={this.state.youtubeIDError}
+                                            helperText={
+                                                this.state.youtubeIDError &&
+                                                'Please enter a Youtube Video ID'
+                                            }
+                                            fullWidth
+                                            required
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            className={classes.button}
+                                            onClick={() => this.handleSubmit(createSong)}
+                                        >
+                                            Add Song
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className={classes.cancel}
+                                            onClick={() => this.props.history.goBack()}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Paper>
+                                )}
+                                {data &&
+                                    !data.createSong.responseError &&
+                                    (() => this.props.history.push('/'))()}
+                            </div>
+                        )}
+                    </Mutation>
                 )}
-            </Mutation>
+            </UserContext.Consumer>
         );
     }
 }

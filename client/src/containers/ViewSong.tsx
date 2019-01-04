@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import { SONG } from '../queries/queries';
 import { Link } from 'react-router-dom';
 import MyAppBar from '../components/AppBar';
-
+import '../styles/view.css';
 import Button from '@material-ui/core/Button';
 import { History } from 'history';
 
@@ -25,7 +25,7 @@ class ViewSong extends React.Component<Props, {}> {
                 {context => (
                     <div>
                         <MyAppBar />
-                        {context && context.state.loggedIn && (
+                        {context && (
                             <header className="App-header">
                                 <h1>ID: {this.props.match.params.id}</h1>
                                 <Query
@@ -41,8 +41,15 @@ class ViewSong extends React.Component<Props, {}> {
                                                     <h3>Title: {data.findSong.song.title}</h3>
                                                     <h3>Artist: {data.findSong.song.artist}</h3>
                                                     <h3>Album: {data.findSong.song.album}</h3>
+                                                    {context.state.loggedIn && (
+                                                        <Button variant="contained" color="primary">
+                                                            Bookmark
+                                                        </Button>
+                                                    )}
                                                     <Button
+                                                        className="view-button"
                                                         variant="contained"
+                                                        id="backButton"
                                                         onClick={() => this.props.history.goBack()}
                                                     >
                                                         Go Back
