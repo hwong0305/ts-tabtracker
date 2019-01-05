@@ -8,22 +8,30 @@ export default {
         try {
             const songRepository = await getConnection().getRepository(Song);
             const userRepository = await getConnection().getRepository(User);
-            // const bookmarkRepository = await getConnection().getRepository(Bookmark);
 
             const song = await songRepository.findOne(songId);
             if (!song) {
                 throw new Error('SongID is not valid');
             }
-            const user = await userRepository.findOne(userId);
+            const user = await userRepository.findOne(userId, {
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
             if (!user) {
                 throw new Error('UserID is not valid');
             }
 
+            const existingBookmarks = user.bookmarks.filter(
+                userBookmark => userBookmark.songs[0].id === song.id
+            );
+
+            if (existingBookmarks.length > 0) {
+                throw new Error('Song is already bookmarked');
+            }
+
             const bookmark = new Bookmark();
             bookmark.songs = [song];
-            // bookmarkRepository.save(bookmark);
 
-            user.bookmarks = user.bookmarks ? [...user.bookmarks, bookmark] : [bookmark];
+            user.bookmarks = user.bookmarks.length > 0 ? [...user.bookmarks, bookmark] : [bookmark];
             userRepository.save(user);
 
             return {
