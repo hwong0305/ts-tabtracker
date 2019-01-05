@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Generated, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { IsAlpha, IsEmail, IsNotEmpty, Matches } from 'class-validator';
+import { Bookmark } from './Bookmark';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    @Generated('uuid')
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({ unique: true })
@@ -31,4 +31,8 @@ export class User {
     @IsNotEmpty()
     @IsAlpha()
     lastName: string;
+
+    @ManyToMany(_type => Bookmark, { cascade: true })
+    @JoinTable()
+    bookmarks: Bookmark[];
 }

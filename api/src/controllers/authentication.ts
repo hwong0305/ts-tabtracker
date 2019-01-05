@@ -77,7 +77,9 @@ export default {
     async fetchUsers() {
         try {
             const userRepository = await getConnection().getRepository(User);
-            const users = await userRepository.find();
+            const users = await userRepository.find({
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
             return users;
         } catch (err) {
             console.log(err);
@@ -87,7 +89,10 @@ export default {
     async fetchUser(username: string) {
         try {
             const userRepository = await getConnection().getRepository(User);
-            const user = await userRepository.findOne({ username });
+            const user = await userRepository.findOne({
+                where: { username },
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
             return user;
         } catch (err) {
             console.log(err);

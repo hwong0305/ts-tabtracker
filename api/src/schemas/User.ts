@@ -9,6 +9,7 @@ export const typeDefs = gql`
         firstName: String
         lastName: String
         email: String
+        bookmarks: [Bookmark]
     }
     type UserResponse {
         user: User

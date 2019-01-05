@@ -77,3 +77,19 @@ export const SONG = gql`
         }
     }
 `;
+
+export const BOOKMARK = gql`
+    mutation addBookmark($userId: String!, $songId: Int!) {
+        addBookmark(userId: $userId, songId: $songId) {
+            responseError
+        }
+    }
+`;
+
+export const UNBOOKMARK = gql`
+    mutation unbookmark($userId: String!, $bookmarkId: Int!) {
+        removeBookmark(userId: $userId, bookmarkId: $bookmarkId) {
+            responseError
+        }
+    }
+`;

@@ -9,7 +9,9 @@
         "ordered-imports": false,
         "interface-name": false,
         "no-submodule-imports": false,
-        "import/newline-after-import": false
+        "import/newline-after-import": false,
+        "variable-name": false,
+        "no-string-throw": false
     },
     "rulesDirectory": []
 }
