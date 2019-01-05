@@ -22,8 +22,8 @@ interface UserContextInterface {
     state: {
         loggedIn: boolean;
         token: string | null;
-        logout: Function;
-        login: Function;
+        logout: () => void;
+        login: (token: string) => void;
     };
 }
 export const UserContext = React.createContext<UserContextInterface | null>(null);
@@ -62,7 +62,7 @@ ReactDOM.render(
                 <React.Fragment>
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
-                    <Route exact path="/" component={Song} />
+                    <Route exact={true} path="/" component={Song} />
                     <Route path="/create/song" component={AddSong} />
                     <Route path="/song/:id" component={ViewSong} />
                 </React.Fragment>
