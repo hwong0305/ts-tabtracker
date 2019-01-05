@@ -9,7 +9,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { History } from 'history';
-import { Mutation } from 'react-apollo';
+import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { UserContext } from '../index';
 
@@ -82,7 +82,7 @@ class Register extends React.Component<Props, RegisterForm> {
         this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
 
-    handleSubmit = (register: Function) => {
+    handleSubmit = (register: MutationFn<any, OperationVariables>) => {
         const { username, email, password, firstName, lastName } = this.state;
         if (
             username.length === 0 ||
@@ -192,8 +192,8 @@ class Register extends React.Component<Props, RegisterForm> {
                                         value={this.state.username}
                                         error={this.state.usernameError ? true : false}
                                         helperText={this.state.usernameError}
-                                        required
-                                        fullWidth
+                                        required={true}
+                                        fullWidth={true}
                                     />
                                     <TextField
                                         name="password"
@@ -203,8 +203,8 @@ class Register extends React.Component<Props, RegisterForm> {
                                         value={this.state.password}
                                         error={this.state.passwordError ? true : false}
                                         helperText={this.state.passwordError}
-                                        required
-                                        fullWidth
+                                        required={true}
+                                        fullWidth={true}
                                     />
                                     <TextField
                                         label="First Name"
@@ -213,8 +213,8 @@ class Register extends React.Component<Props, RegisterForm> {
                                         value={this.state.firstName}
                                         error={this.state.firstNameError ? true : false}
                                         helperText={this.state.firstNameError}
-                                        required
-                                        fullWidth
+                                        required={true}
+                                        fullWidth={true}
                                     />
                                     <TextField
                                         label="Last Name"
@@ -223,8 +223,8 @@ class Register extends React.Component<Props, RegisterForm> {
                                         value={this.state.lastName}
                                         error={this.state.lastNameError ? true : false}
                                         helperText={this.state.lastNameError}
-                                        required
-                                        fullWidth
+                                        required={true}
+                                        fullWidth={true}
                                     />
                                     <TextField
                                         label="Email"
@@ -233,8 +233,8 @@ class Register extends React.Component<Props, RegisterForm> {
                                         value={this.state.email}
                                         error={this.state.emailError ? true : false}
                                         helperText={this.state.emailError}
-                                        required
-                                        fullWidth
+                                        required={true}
+                                        fullWidth={true}
                                     />
                                     <Button
                                         variant="contained"
@@ -250,7 +250,7 @@ class Register extends React.Component<Props, RegisterForm> {
                                                 ? true
                                                 : false
                                         }
-                                        fullWidth
+                                        fullWidth={true}
                                     >
                                         Register
                                     </Button>
@@ -258,7 +258,7 @@ class Register extends React.Component<Props, RegisterForm> {
                                         variant="contained"
                                         className={classes.cancel}
                                         onClick={() => this.props.history.goBack()}
-                                        fullWidth
+                                        fullWidth={true}
                                     >
                                         Cancel
                                     </Button>

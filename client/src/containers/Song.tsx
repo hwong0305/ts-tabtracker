@@ -70,8 +70,12 @@ class Song extends React.Component<Props, {}> {
                 <div className="App-header">
                     <Query query={SONG_QUERY}>
                         {({ error, loading, data }) => {
-                            if (loading) return <h1>Loading</h1>;
-                            if (error) return <h1>Error</h1>;
+                            if (loading) {
+                                return <h1>Loading</h1>;
+                            }
+                            if (error) {
+                                return <h1>Error</h1>;
+                            }
                             return (
                                 <Paper className={classes.main}>
                                     <ToolBar className={classes.toolbar}>

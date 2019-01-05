@@ -17,13 +17,13 @@ export const typeDefs = gql`
 
 export const resolvers = {
     Query: {
-        findSong: async (_: {}, args: { id: number }) => await song.findSong(args.id),
-        songs: async () => await song.getSongs(),
+        findSong: async (_: {}, args: { id: number }) => song.findSong(args.id),
+        songs: async () => song.getSongs(),
         filteredSong: async (_: {}, args: { [key: string]: string }) =>
-            await song.getFilteredSongs(args.title, args.artist, args.album),
+            song.getFilteredSongs(args.title, args.artist, args.album),
     },
     Mutation: {
         createSong: async (_: {}, args: { [key: string]: string }) =>
-            await song.create(args.title, args.album, args.artist, args.albumImg, args.youtubeID),
+            song.create(args.title, args.album, args.artist, args.albumImg, args.youtubeID),
     },
 };

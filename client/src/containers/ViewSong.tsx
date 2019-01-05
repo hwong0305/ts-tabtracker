@@ -32,8 +32,12 @@ class ViewSong extends React.Component<Props, {}> {
                                     variables={{ id: Number(this.props.match.params.id) }}
                                 >
                                     {({ loading, error, data }) => {
-                                        if (loading) return <p>Loading...</p>;
-                                        if (error) return <p>error...</p>;
+                                        if (loading) {
+                                            return <p>Loading...</p>;
+                                        }
+                                        if (error) {
+                                            return <p>error...</p>;
+                                        }
                                         if (data.findSong.song) {
                                             return (
                                                 <React.Fragment>
