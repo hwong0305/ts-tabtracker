@@ -93,10 +93,32 @@ export default {
                 where: { username },
                 relations: ['bookmarks', 'bookmarks.songs'],
             });
-            return user;
+            return {
+                user,
+                responseError: false,
+            };
         } catch (err) {
             console.log(err);
-            return null;
+            return {
+                responseError: true,
+            };
+        }
+    },
+    async findUserById(userId: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne(userId, {
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
+            return {
+                user,
+                responseError: false,
+            };
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
         }
     },
 };

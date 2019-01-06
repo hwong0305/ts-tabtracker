@@ -11,7 +11,7 @@ const typeDefs = gql`
         filteredSong(title: String, artist: String, album: String): [Song]
         findSong(id: Int): SongResponse
         songs: [Song]
-        user(username: String): User
+        user(username: String, userId: String): UserResponse
         users: [User]
     }
     type Mutation {

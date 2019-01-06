@@ -170,8 +170,10 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                             context &&
                                             !data.login.responseError &&
                                             (() => {
-                                                localStorage.setItem('token', data.login.token);
-                                                context.state.login('token');
+                                                context.state.login(
+                                                    data.login.token,
+                                                    data.login.user.id
+                                                );
                                                 return <Redirect to="/" />;
                                             })()}
                                     </form>

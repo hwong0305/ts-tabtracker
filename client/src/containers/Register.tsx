@@ -268,7 +268,11 @@ class Register extends React.Component<Props, RegisterForm> {
                                     !data.register.responseError &&
                                     (() => {
                                         localStorage.setItem('token', data.register.token);
-                                        context.state.login(data.register.token);
+                                        localStorage.setItem('userID', data.register.user.id);
+                                        context.state.login(
+                                            data.register.token,
+                                            data.register.user.id
+                                        );
                                         return <Redirect to="/" />;
                                     })}
                             </div>
