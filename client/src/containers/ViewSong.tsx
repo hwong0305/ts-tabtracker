@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import { History } from 'history';
 
 import { UserContext } from '../index';
+import UserBookmark from '../components/UserBookmark';
 
 interface Props {
     history: History;
@@ -45,9 +46,9 @@ class ViewSong extends React.Component<Props, {}> {
                                                     <h3>Artist: {data.findSong.song.artist}</h3>
                                                     <h3>Album: {data.findSong.song.album}</h3>
                                                     {context.state.loggedIn && (
-                                                        <Button variant="contained" color="primary">
-                                                            Bookmark
-                                                        </Button>
+                                                        <UserBookmark
+                                                            songId={this.props.match.params.id}
+                                                        />
                                                     )}
                                                     <Button
                                                         className="view-button"

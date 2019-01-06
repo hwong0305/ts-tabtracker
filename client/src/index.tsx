@@ -20,29 +20,36 @@ const client = new ApolloClient({
 
 interface UserContextInterface {
     state: {
+        userID: string | null;
         loggedIn: boolean;
         token: string | null;
         logout: () => void;
-        login: (token: string) => void;
+        login: (token: string, userID: string) => void;
     };
 }
 export const UserContext = React.createContext<UserContextInterface | null>(null);
 
 export class UserProvider extends React.Component {
     state = {
+        userID: localStorage.getItem('userID'),
         loggedIn: localStorage.getItem('token') ? true : false,
         token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
         logout: () => {
             localStorage.removeItem('token');
+            localStorage.removeItem('userID');
             return this.setState({
                 loggedIn: false,
                 token: null,
+                userID: null,
             });
         },
-        login: (token: string) => {
+        login: (token: string, userID: string) => {
+            localStorage.setItem('token', token);
+            localStorage.setItem('userID', userID);
             return this.setState({
                 loggedIn: true,
                 token,
+                userID,
             });
         },
     };

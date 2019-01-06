@@ -4,6 +4,7 @@ export const LOGIN = gql`
     mutation login($username: String!, $password: String!) {
         login(username: $username, password: $password) {
             user {
+                id
                 firstName
                 lastName
                 email
@@ -29,6 +30,9 @@ export const REGISTER = gql`
             lastName: $lastName
             email: $email
         ) {
+            user {
+                id
+            }
             token
             responseError
         }
@@ -90,6 +94,26 @@ export const UNBOOKMARK = gql`
     mutation unbookmark($userId: String!, $bookmarkId: Int!) {
         removeBookmark(userId: $userId, bookmarkId: $bookmarkId) {
             responseError
+        }
+    }
+`;
+
+export const FIND_USER = gql`
+    query findUser($userId: String, $username: String) {
+        user(username: $username, userId: $userId) {
+            user {
+                id
+                username
+                bookmarks {
+                    id
+                    songs {
+                        id
+                        artist
+                        title
+                        album
+                    }
+                }
+            }
         }
     }
 `;

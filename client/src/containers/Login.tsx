@@ -11,10 +11,8 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { UserContext } from '../index';
-
 import { LoginForm } from '../interfaces';
 import { History } from 'history';
-
 import { LOGIN } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
@@ -166,12 +164,21 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                         >
                                             Cancel
                                         </Button>
+                                        <Button
+                                            className={classes.cancel}
+                                            onClick={() => this.props.history.push('/register')}
+                                            fullWidth={true}
+                                        >
+                                            Don't have an account
+                                        </Button>
                                         {data &&
                                             context &&
                                             !data.login.responseError &&
                                             (() => {
-                                                localStorage.setItem('token', data.login.token);
-                                                context.state.login('token');
+                                                context.state.login(
+                                                    data.login.token,
+                                                    data.login.user.id
+                                                );
                                                 return <Redirect to="/" />;
                                             })()}
                                     </form>
