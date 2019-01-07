@@ -1,18 +1,18 @@
-import * as React from 'react';
+import { createStyles, Theme, WithStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import LibraryAdd from '@material-ui/icons/LibraryAddOutlined';
 import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, Theme, WithStyles } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import LibraryAdd from '@material-ui/icons/LibraryAddOutlined';
 import { History } from 'history';
-import { SongForm } from '../interfaces';
-import { Redirect } from 'react-router-dom';
+import * as React from 'react';
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
-import { ADD_SONG, SONG_QUERY } from '../queries/queries';
+import { Redirect } from 'react-router-dom';
 import { UserContext } from '../index';
+import { SongForm } from '../interfaces';
+import { ADD_SONG, SONG_QUERY } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
     history: History;

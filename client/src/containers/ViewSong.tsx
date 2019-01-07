@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { Query } from 'react-apollo';
-import { SONG } from '../queries/queries';
-import MyAppBar from '../components/AppBar';
-import '../styles/view.css';
 import Button from '@material-ui/core/Button';
 import { History } from 'history';
-
-import { UserContext } from '../index';
+import * as React from 'react';
+import { Query } from 'react-apollo';
+import MyAppBar from '../components/AppBar';
 import UserBookmark from '../components/UserBookmark';
+import { UserContext } from '../index';
+import { SONG } from '../queries/queries';
+import '../styles/view.css';
 
 interface Props {
     history: History;

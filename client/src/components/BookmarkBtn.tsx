@@ -1,7 +1,6 @@
-import * as React from 'react';
 import Button from '@material-ui/core/Button';
+import * as React from 'react';
 import { Mutation } from 'react-apollo';
-
 import { BOOKMARK } from '../queries/queries';
 
 interface Props {

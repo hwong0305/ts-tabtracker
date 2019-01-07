@@ -1,18 +1,18 @@
-import * as React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import LockIcon from '@material-ui/icons/LockOutlined';
 import { CssBaseline, Theme } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import { History } from 'history';
+import * as React from 'react';
 import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { UserContext } from '../index';
 import { LoginForm } from '../interfaces';
-import { History } from 'history';
 import { LOGIN } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
