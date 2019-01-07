@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Query } from 'react-apollo';
-import { SONG } from '../queries/queries';
-import { Link } from 'react-router-dom';
-import MyAppBar from '../components/AppBar';
-import '../styles/view.css';
 import Button from '@material-ui/core/Button';
 import { History } from 'history';
-
+import * as React from 'react';
+import Youtube from 'react-youtube';
+import { Query } from 'react-apollo';
+import MyAppBar from '../components/AppBar';
+import UserBookmark from '../components/UserBookmark';
 import { UserContext } from '../index';
+import { SONG } from '../queries/queries';
+import '../styles/view.css';
 
 interface Props {
     history: History;
@@ -27,24 +27,34 @@ class ViewSong extends React.Component<Props, {}> {
                         <MyAppBar />
                         {context && (
                             <header className="App-header">
-                                <h1>ID: {this.props.match.params.id}</h1>
                                 <Query
                                     query={SONG}
                                     variables={{ id: Number(this.props.match.params.id) }}
                                 >
                                     {({ loading, error, data }) => {
-                                        if (loading) return <p>Loading...</p>;
-                                        if (error) return <p>error...</p>;
+                                        if (loading) {
+                                            return <p>Loading...</p>;
+                                        }
+                                        if (error) {
+                                            return <p>error...</p>;
+                                        }
                                         if (data.findSong.song) {
                                             return (
                                                 <React.Fragment>
+                                                    <img
+                                                        id="albumImg"
+                                                        src={data.findSong.song.albumImg}
+                                                    />
+                                                    <Youtube
+                                                        videoId={data.findSong.song.youtubeID}
+                                                    />
                                                     <h3>Title: {data.findSong.song.title}</h3>
                                                     <h3>Artist: {data.findSong.song.artist}</h3>
                                                     <h3>Album: {data.findSong.song.album}</h3>
                                                     {context.state.loggedIn && (
-                                                        <Button variant="contained" color="primary">
-                                                            Bookmark
-                                                        </Button>
+                                                        <UserBookmark
+                                                            songId={this.props.match.params.id}
+                                                        />
                                                     )}
                                                     <Button
                                                         className="view-button"
@@ -61,16 +71,6 @@ class ViewSong extends React.Component<Props, {}> {
                                         }
                                     }}
                                 </Query>
-                            </header>
-                        )}
-                        {context && !context.state.loggedIn && (
-                            <header className="App-header">
-                                <p>
-                                    Please{' '}
-                                    <Link className="App-link" to="/login">
-                                        Log In
-                                    </Link>
-                                </p>
                             </header>
                         )}
                     </div>

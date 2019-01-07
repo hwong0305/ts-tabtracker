@@ -1,20 +1,20 @@
-import * as React from 'react';
+import { createStyles, Theme, WithStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import LibraryAdd from '@material-ui/icons/LibraryAddOutlined';
 import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, Theme, WithStyles } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import LibraryAdd from '@material-ui/icons/LibraryAddOutlined';
 import { History } from 'history';
-import { SongForm } from '../interfaces';
+import * as React from 'react';
+import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
-import { Mutation } from 'react-apollo';
-import { ADD_SONG, SONG_QUERY } from '../queries/queries';
 import { UserContext } from '../index';
+import { SongForm } from '../interfaces';
+import { ADD_SONG, SONG_QUERY } from '../queries/queries';
 
-interface props extends WithStyles<typeof styles> {
+interface Props extends WithStyles<typeof styles> {
     history: History;
 }
 
@@ -56,8 +56,8 @@ const styles = (theme: Theme) =>
         },
     });
 
-class AddSong extends React.Component<props, SongForm> {
-    constructor(props: props) {
+class AddSong extends React.Component<Props, SongForm> {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -85,7 +85,7 @@ class AddSong extends React.Component<props, SongForm> {
             [name + 'Error']: false,
         });
     };
-    handleSubmit = (addSong: Function) => {
+    handleSubmit = (addSong: MutationFn<any, OperationVariables>) => {
         if (
             this.state.title.length === 0 ||
             this.state.artist.length === 0 ||
@@ -166,8 +166,8 @@ class AddSong extends React.Component<props, SongForm> {
                                             helperText={
                                                 this.state.titleError && 'Please enter a Title'
                                             }
-                                            fullWidth
-                                            required
+                                            fullWidth={true}
+                                            required={true}
                                         />
                                         <TextField
                                             label="Artist"
@@ -178,8 +178,8 @@ class AddSong extends React.Component<props, SongForm> {
                                             helperText={
                                                 this.state.artistError && 'Please enter an Artist'
                                             }
-                                            fullWidth
-                                            required
+                                            fullWidth={true}
+                                            required={true}
                                         />
                                         <TextField
                                             label="Album"
@@ -190,8 +190,8 @@ class AddSong extends React.Component<props, SongForm> {
                                             helperText={
                                                 this.state.albumError && 'Please enter an Album'
                                             }
-                                            fullWidth
-                                            required
+                                            fullWidth={true}
+                                            required={true}
                                         />
                                         <TextField
                                             label="Album Image"
@@ -203,8 +203,8 @@ class AddSong extends React.Component<props, SongForm> {
                                                 this.state.albumImgError &&
                                                 'Please enter an Album Image URL'
                                             }
-                                            fullWidth
-                                            required
+                                            fullWidth={true}
+                                            required={true}
                                         />
                                         <TextField
                                             label="Youtube ID"
@@ -216,8 +216,8 @@ class AddSong extends React.Component<props, SongForm> {
                                                 this.state.youtubeIDError &&
                                                 'Please enter a Youtube Video ID'
                                             }
-                                            fullWidth
-                                            required
+                                            fullWidth={true}
+                                            required={true}
                                         />
                                         <Button
                                             variant="contained"

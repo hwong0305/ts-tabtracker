@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { User } from '../entity/User';
 import createToken from './utilities/createToken';
 import hashPassword from './utilities/hashPassword';
@@ -6,30 +5,7 @@ import comparePassword from './utilities/comparePassword';
 import { getConnection } from 'typeorm';
 import { validate } from 'class-validator';
 
-// something wong
 export default {
-    async register(req: Request, res: Response) {
-        try {
-            const user = new User();
-            user.username = req.body.username;
-            user.password = await hashPassword(req.body.password);
-            user.email = req.body.email;
-            user.firstName = req.body.firstName;
-            user.lastName = req.body.lastName;
-
-            await getConnection()
-                .getRepository(User)
-                .save(user);
-            res.json({
-                user: JSON.parse(JSON.stringify(user)),
-                token: createToken(JSON.parse(JSON.stringify(user))),
-            });
-        } catch (err) {
-            res.status(500).send({
-                error: err,
-            });
-        }
-    },
     async registerUser(
         username: string,
         password: string,
@@ -69,32 +45,6 @@ export default {
             };
         }
     },
-    async login(req: Request, res: Response) {
-        try {
-            const userRepository = await getConnection().getRepository(User);
-            const user = await userRepository.findOne({ username: req.body.username });
-            if (!user) res.status(404).send({ message: 'User Not Found' });
-            else {
-                const isPasswordValid: boolean = await comparePassword(
-                    req.body.password,
-                    user.password
-                );
-                if (isPasswordValid)
-                    res.json({
-                        user: JSON.parse(JSON.stringify(user)),
-                        token: createToken(JSON.parse(JSON.stringify(user))),
-                    });
-                else {
-                    res.status(400).send({ message: 'Incorrect Password' });
-                }
-            }
-        } catch (err) {
-            console.log(err);
-            res.status(500).send({
-                error: err,
-            });
-        }
-    },
     async loginUser(username: string, password: string) {
         try {
             const userRepository = await getConnection().getRepository(User);
@@ -127,7 +77,9 @@ export default {
     async fetchUsers() {
         try {
             const userRepository = await getConnection().getRepository(User);
-            const users = await userRepository.find();
+            const users = await userRepository.find({
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
             return users;
         } catch (err) {
             console.log(err);
@@ -137,11 +89,36 @@ export default {
     async fetchUser(username: string) {
         try {
             const userRepository = await getConnection().getRepository(User);
-            const user = await userRepository.findOne({ username });
-            return user;
+            const user = await userRepository.findOne({
+                where: { username },
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
+            return {
+                user,
+                responseError: false,
+            };
         } catch (err) {
             console.log(err);
-            return null;
+            return {
+                responseError: true,
+            };
+        }
+    },
+    async findUserById(userId: string) {
+        try {
+            const userRepository = await getConnection().getRepository(User);
+            const user = await userRepository.findOne(userId, {
+                relations: ['bookmarks', 'bookmarks.songs'],
+            });
+            return {
+                user,
+                responseError: false,
+            };
+        } catch (err) {
+            console.log(err);
+            return {
+                responseError: true,
+            };
         }
     },
 };

@@ -9,11 +9,12 @@ export const typeDefs = gql`
         firstName: String
         lastName: String
         email: String
+        bookmarks: [Bookmark]
     }
     type UserResponse {
         user: User
         token: String
-        responseError: Boolean
+        responseError: Boolean!
     }
     type LoginResponse {
         user: User
@@ -24,20 +25,34 @@ export const typeDefs = gql`
 
 export const resolvers = {
     Query: {
-        user: async (_: {}, args: { [key: string]: string }) =>
-            await authentication.fetchUser(args.username),
-        users: async () => await authentication.fetchUsers(),
+        user: async (_: {}, args: { [key: string]: string }) => {
+            try {
+                if (args.username) {
+                    return authentication.fetchUser(args.username);
+                }
+                if (args.userId) {
+                    return authentication.findUserById(args.userId);
+                } else {
+                    throw new Error('Invalid Parameters');
+                }
+            } catch (err) {
+                console.log(err);
+                return {
+                    responseError: true,
+                };
+            }
+        },
+        users: async () => authentication.fetchUsers(),
     },
     Mutation: {
         register: async (_: {}, args: { [key: string]: string }) =>
-            await authentication.registerUser(
+            authentication.registerUser(
                 args.username,
                 args.password,
                 args.email,
                 args.firstName,
                 args.lastName
             ),
-        login: async (_: {}, args: any) =>
-            await authentication.loginUser(args.username, args.password),
+        login: async (_: {}, args: any) => authentication.loginUser(args.username, args.password),
     },
 };

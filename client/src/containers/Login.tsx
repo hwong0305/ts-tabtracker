@@ -1,20 +1,18 @@
-import * as React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import LockIcon from '@material-ui/icons/LockOutlined';
 import { CssBaseline, Theme } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import { Mutation } from 'react-apollo';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import { History } from 'history';
+import * as React from 'react';
+import { Mutation, MutationFn, OperationVariables } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 import { UserContext } from '../index';
-
 import { LoginForm } from '../interfaces';
-import { History } from 'history';
-
 import { LOGIN } from '../queries/queries';
 
 interface Props extends WithStyles<typeof styles> {
@@ -77,7 +75,7 @@ class Login extends React.PureComponent<Props, LoginForm> {
         const { name, value } = event.target;
         this.setState({ ...this.state, [name]: value, [name + 'Error']: '' });
     };
-    handleSubmit = (login: Function) => {
+    handleSubmit = (login: MutationFn<any, OperationVariables>) => {
         const { username, password } = this.state;
         if (username.length !== 0 && password.length !== 0) {
             login({
@@ -87,8 +85,12 @@ class Login extends React.PureComponent<Props, LoginForm> {
                 },
             });
         } else {
-            if (username.length === 0) this.setState({ usernameError: 'Username is required' });
-            if (password.length === 0) this.setState({ passwordError: 'Password is required' });
+            if (username.length === 0) {
+                this.setState({ usernameError: 'Username is required' });
+            }
+            if (password.length === 0) {
+                this.setState({ passwordError: 'Password is required' });
+            }
             setTimeout(
                 () =>
                     this.setState({
@@ -126,8 +128,8 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                             onChange={this.handleChange}
                                             helperText={this.state.usernameError}
                                             error={this.state.usernameError ? true : false}
-                                            required
-                                            fullWidth
+                                            required={true}
+                                            fullWidth={true}
                                         />
                                         <TextField
                                             label="Password"
@@ -137,8 +139,8 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                             onChange={this.handleChange}
                                             helperText={this.state.passwordError}
                                             error={this.state.passwordError ? true : false}
-                                            required
-                                            fullWidth
+                                            required={true}
+                                            fullWidth={true}
                                         />
                                         <Button
                                             variant="contained"
@@ -150,7 +152,7 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                                     ? true
                                                     : false
                                             }
-                                            fullWidth
+                                            fullWidth={true}
                                         >
                                             Login
                                         </Button>
@@ -158,16 +160,25 @@ class Login extends React.PureComponent<Props, LoginForm> {
                                             variant="contained"
                                             className={classes.cancel}
                                             onClick={() => this.props.history.goBack()}
-                                            fullWidth
+                                            fullWidth={true}
                                         >
                                             Cancel
+                                        </Button>
+                                        <Button
+                                            className={classes.cancel}
+                                            onClick={() => this.props.history.push('/register')}
+                                            fullWidth={true}
+                                        >
+                                            Don't have an account
                                         </Button>
                                         {data &&
                                             context &&
                                             !data.login.responseError &&
                                             (() => {
-                                                localStorage.setItem('token', data.login.token);
-                                                context.state.login('token');
+                                                context.state.login(
+                                                    data.login.token,
+                                                    data.login.user.id
+                                                );
                                                 return <Redirect to="/" />;
                                             })()}
                                     </form>

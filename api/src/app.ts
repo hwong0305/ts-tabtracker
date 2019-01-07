@@ -11,7 +11,11 @@ import { schema } from './schemas/schema';
 const app = express();
 app.use(bodyParser.json());
 // For development only
-app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+    })
+);
 
 const server = new ApolloServer({ schema });
 server.applyMiddleware({ app });

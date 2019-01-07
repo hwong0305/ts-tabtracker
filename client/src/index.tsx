@@ -7,7 +7,6 @@ import './App.css';
 import './index.css';
 
 import AddSong from './containers/AddSong';
-// import App from './App';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
@@ -21,29 +20,36 @@ const client = new ApolloClient({
 
 interface UserContextInterface {
     state: {
+        userID: string | null;
         loggedIn: boolean;
         token: string | null;
-        logout: Function;
-        login: Function;
+        logout: () => void;
+        login: (token: string, userID: string) => void;
     };
 }
 export const UserContext = React.createContext<UserContextInterface | null>(null);
 
 export class UserProvider extends React.Component {
     state = {
+        userID: localStorage.getItem('userID'),
         loggedIn: localStorage.getItem('token') ? true : false,
         token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
         logout: () => {
             localStorage.removeItem('token');
+            localStorage.removeItem('userID');
             return this.setState({
                 loggedIn: false,
                 token: null,
+                userID: null,
             });
         },
-        login: (token: string) => {
+        login: (token: string, userID: string) => {
+            localStorage.setItem('token', token);
+            localStorage.setItem('userID', userID);
             return this.setState({
                 loggedIn: true,
                 token,
+                userID,
             });
         },
     };
@@ -61,10 +67,9 @@ ReactDOM.render(
         <UserProvider>
             <Router>
                 <React.Fragment>
-                    {/* <Route exact path="/" component={App} /> */}
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
-                    <Route exact path="/" component={Song} />
+                    <Route exact={true} path="/" component={Song} />
                     <Route path="/create/song" component={AddSong} />
                     <Route path="/song/:id" component={ViewSong} />
                 </React.Fragment>
