@@ -2,6 +2,9 @@ import * as React from 'react';
 import './App.css';
 
 import MyAppBar from './components/AppBar';
+import MyTable from './components/Table';
+
+import Paper from '@material-ui/core/Paper';
 
 class App extends React.Component {
     render() {
@@ -9,7 +12,9 @@ class App extends React.Component {
             <div className="App">
                 <MyAppBar />
                 <header className="App-header">
-                    <p>Hello World!</p>
+                    <Paper>
+                        <MyTable />
+                    </Paper>
                 </header>
             </div>
         );
