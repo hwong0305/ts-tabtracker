@@ -77,6 +77,8 @@ export const SONG = gql`
                 artist
                 title
                 album
+                albumImg
+                youtubeID
             }
         }
     }
