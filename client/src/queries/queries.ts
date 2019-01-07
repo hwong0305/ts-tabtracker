@@ -119,3 +119,11 @@ export const FIND_USER = gql`
         }
     }
 `;
+
+export const REMOVE_SONG = gql`
+    mutation removeSong($songId: Int!) {
+        removeSong(songId: $songId) {
+            responseError
+        }
+    }
+`;

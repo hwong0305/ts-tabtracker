@@ -30,7 +30,7 @@ class ViewSong extends React.Component<Props, {}> {
                                     query={SONG}
                                     variables={{ id: Number(this.props.match.params.id) }}
                                 >
-                                    {({ loading, error, data }) => {
+                                    {({ loading, error, data, refetch }) => {
                                         if (loading) {
                                             return <p>Loading...</p>;
                                         }
@@ -47,6 +47,7 @@ class ViewSong extends React.Component<Props, {}> {
                                                     album={data.findSong.song.album}
                                                     history={this.props.history}
                                                     loggedIn={context.state.loggedIn}
+                                                    refetch={refetch}
                                                 />
                                             );
                                         } else {

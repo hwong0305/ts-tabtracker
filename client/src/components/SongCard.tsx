@@ -5,7 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import YouTube from 'react-youtube';
-
+import { Mutation } from 'react-apollo';
+import { REMOVE_SONG } from '../queries/queries';
 import UserBookmark from './UserBookmark';
 import { History } from 'history';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
@@ -19,6 +20,7 @@ interface Props extends WithStyles<typeof styles> {
     songId: number;
     history: History;
     loggedIn: boolean;
+    refetch: () => void;
 }
 
 const styles = () =>
@@ -44,42 +46,61 @@ class SongCard extends React.Component<Props, {}> {
     render() {
         const { classes } = this.props;
         return (
-            <Card className={classes.card}>
-                <YouTube videoId={this.props.youtubeID} />
-                <CardContent className={classes.cardBody}>
-                    <h3>{`${this.props.artist} - ${this.props.title} - ${this.props.album}`}</h3>
-                </CardContent>
-                <CardActionArea className={classes.cardFooter}>
-                    <CardActions>
-                        {this.props.loggedIn && (
-                            <React.Fragment>
-                                <UserBookmark songId={this.props.songId} />
-                                <Button
-                                    className={classes.button}
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Edit
-                                </Button>
-                                <Button
-                                    className={classes.button}
-                                    variant="contained"
-                                    color="secondary"
-                                >
-                                    Delete
-                                </Button>
-                            </React.Fragment>
-                        )}
-                        <Button
-                            className={classes.button}
-                            variant="contained"
-                            onClick={() => this.props.history.goBack()}
-                        >
-                            Go Back
-                        </Button>
-                    </CardActions>
-                </CardActionArea>
-            </Card>
+            <Mutation mutation={REMOVE_SONG}>
+                {(removeSong, { data }) => {
+                    if (data && !data.removeSong.responseError) {
+                        this.props.history.goBack();
+                        this.props.refetch();
+                    }
+                    return (
+                        <Card className={classes.card}>
+                            <YouTube videoId={this.props.youtubeID} />
+                            <CardContent className={classes.cardBody}>
+                                <h3>{`${this.props.artist} - ${this.props.title} - ${
+                                    this.props.album
+                                }`}</h3>
+                            </CardContent>
+                            <CardActionArea className={classes.cardFooter}>
+                                <CardActions>
+                                    {this.props.loggedIn && (
+                                        <React.Fragment>
+                                            <UserBookmark songId={this.props.songId} />
+                                            <Button
+                                                className={classes.button}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                onClick={() =>
+                                                    removeSong({
+                                                        variables: {
+                                                            songId: Number(this.props.songId),
+                                                        },
+                                                    })
+                                                }
+                                                className={classes.button}
+                                                variant="contained"
+                                                color="secondary"
+                                            >
+                                                Delete
+                                            </Button>
+                                        </React.Fragment>
+                                    )}
+                                    <Button
+                                        className={classes.button}
+                                        variant="contained"
+                                        onClick={() => this.props.history.goBack()}
+                                    >
+                                        Go Back
+                                    </Button>
+                                </CardActions>
+                            </CardActionArea>
+                        </Card>
+                    );
+                }}
+            </Mutation>
         );
     }
 }
