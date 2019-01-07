@@ -30,6 +30,7 @@ const typeDefs = gql`
             albumImg: String!
             youtubeID: String!
         ): SongResponse
+        removeSong(songId: Int!): SongResponse
         addBookmark(userId: String!, songId: Int!): BookmarkResponse
         removeBookmark(userId: String!, bookmarkId: Int!): BookmarkResponse
     }

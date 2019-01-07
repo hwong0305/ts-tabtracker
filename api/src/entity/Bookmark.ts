@@ -6,7 +6,7 @@ export class Bookmark {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(_type => Song, { onDelete: 'CASCADE', cascade: true })
+    @ManyToMany(_type => Song, { cascade: true })
     @JoinTable()
     songs: Song[];
 }

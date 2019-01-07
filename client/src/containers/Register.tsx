@@ -272,7 +272,7 @@ class Register extends React.Component<Props, RegisterForm> {
                                             data.register.user.id
                                         );
                                         return <Redirect to="/" />;
-                                    })}
+                                    })()}
                             </div>
                         )}
                     </Mutation>

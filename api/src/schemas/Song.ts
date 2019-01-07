@@ -26,5 +26,6 @@ export const resolvers = {
     Mutation: {
         createSong: async (_: {}, args: { [key: string]: string }) =>
             song.create(args.title, args.album, args.artist, args.albumImg, args.youtubeID),
+        removeSong: async (_: {}, args: { songId: number }) => song.deleteSong(args.songId),
     },
 };

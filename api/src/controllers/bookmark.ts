@@ -20,9 +20,13 @@ export default {
                 throw new Error('UserID is not valid');
             }
 
-            const existingBookmarks = user.bookmarks.filter(
-                userBookmark => userBookmark.songs[0].id === song.id
-            );
+            const existingBookmarks = user.bookmarks.filter(userBookmark => {
+                if (userBookmark.songs[0]) {
+                    return userBookmark.songs[0].id === song.id;
+                } else {
+                    return null;
+                }
+            });
 
             if (existingBookmarks.length > 0) {
                 throw new Error('Song is already bookmarked');
@@ -31,7 +35,13 @@ export default {
             const bookmark = new Bookmark();
             bookmark.songs = [song];
 
-            user.bookmarks = user.bookmarks.length > 0 ? [...user.bookmarks, bookmark] : [bookmark];
+            user.bookmarks = user.bookmarks.filter(userBookmark => userBookmark.songs.length > 0);
+
+            user.bookmarks =
+                user.bookmarks && user.bookmarks.length > 0
+                    ? [...user.bookmarks, bookmark]
+                    : [bookmark];
+
             userRepository.save(user);
 
             return {
