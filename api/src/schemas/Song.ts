@@ -8,6 +8,7 @@ export const typeDefs = gql`
         artist: String!
         album: String!
         albumImg: String!
+        youtubeID: String!
     }
     type SongResponse {
         song: Song
