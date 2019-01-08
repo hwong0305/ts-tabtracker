@@ -4,6 +4,7 @@ import { typeDefs as BookmarkTypeDefs, resolvers as BookmarkResolvers } from './
 import { typeDefs as SongTypeDefs, resolvers as SongResolvers } from './Song';
 import { typeDefs as UserTypeDefs, resolvers as UserResolvers } from './User';
 import { merge } from 'lodash';
+import { Request } from 'express';
 
 const typeDefs = gql`
     type Query {
@@ -37,6 +38,11 @@ const typeDefs = gql`
 `;
 
 const resolvers = {};
+
+export const context = ({ req }: { req: Request }) => {
+    const token = req.headers.authorization || '';
+    return { token };
+};
 
 export const schema = makeExecutableSchema({
     typeDefs: [typeDefs, UserTypeDefs, SongTypeDefs, BookmarkTypeDefs],

@@ -16,6 +16,13 @@ import * as serviceWorker from './serviceWorker';
 
 const client = new ApolloClient({
     uri: 'http://localhost:8081/graphql',
+    request: async operation => {
+        operation.setContext({
+            headers: {
+                authorization: localStorage.getItem('token'),
+            },
+        });
+    },
 });
 
 interface UserContextInterface {

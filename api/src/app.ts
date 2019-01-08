@@ -6,7 +6,7 @@ import { createConnection } from 'typeorm';
 import { ApolloServer } from 'apollo-server-express';
 
 import Router from './router';
-import { schema } from './schemas/schema';
+import { context, schema } from './schemas/schema';
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +17,7 @@ app.use(
     })
 );
 
-const server = new ApolloServer({ schema });
+const server = new ApolloServer({ schema, context });
 server.applyMiddleware({ app });
 
 // Getting routes from separate file
