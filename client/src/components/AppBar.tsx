@@ -18,6 +18,7 @@ const styles = createStyles({
     },
 });
 
+const BookmarksLink: React.SFC<{}> = props => <Link to="/bookmarks" {...props} />;
 const LoginLink: React.SFC<{}> = props => <Link to="/login" {...props} />;
 const RegisterLink: React.SFC<{}> = props => <Link to="/register" {...props} />;
 const BrowseLink: React.SFC<{}> = props => <Link to="/" {...props} />;
@@ -43,6 +44,9 @@ const LogoutButton: React.SFC<{}> = () => (
                 <React.Fragment>
                     <Button color="inherit" component={BrowseLink}>
                         Browse
+                    </Button>
+                    <Button color="inherit" component={BookmarksLink}>
+                        Bookmarks
                     </Button>
                     <Button
                         color="inherit"

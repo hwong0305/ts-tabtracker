@@ -7,6 +7,7 @@ import './App.css';
 import './index.css';
 
 import AddSong from './containers/AddSong';
+import Bookmarks from './containers/Bookmarks';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
@@ -38,7 +39,7 @@ export const UserContext = React.createContext<UserContextInterface | null>(null
 
 export class UserProvider extends React.Component {
     state = {
-        userID: localStorage.getItem('userID'),
+        userID: localStorage.getItem('userID') ? localStorage.getItem('userID') : null,
         loggedIn: localStorage.getItem('token') ? true : false,
         token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
         logout: () => {
@@ -79,6 +80,7 @@ ReactDOM.render(
                     <Route exact={true} path="/" component={Song} />
                     <Route path="/create/song" component={AddSong} />
                     <Route path="/song/:id" component={ViewSong} />
+                    <Route path="/bookmarks" component={Bookmarks} />
                 </React.Fragment>
             </Router>
         </UserProvider>
