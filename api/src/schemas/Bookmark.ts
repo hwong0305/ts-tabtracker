@@ -29,7 +29,19 @@ export const resolvers = {
                 };
             }
         },
-        removeBookmark: async (_parent: {}, args: any) =>
-            bookmark.removeBookmark(args.userId, args.bookmarkId),
+        removeBookmark: async (_parent: {}, args: any, context: any) => {
+            try {
+                const response = await verifyJwt(context.token);
+                if (!response) {
+                    throw new Error('Invalid Token');
+                }
+                return bookmark.removeBookmark(args.userId, args.bookmarkId);
+            } catch (err) {
+                console.log(err);
+                return {
+                    responseError: true,
+                };
+            }
+        },
     },
 };
