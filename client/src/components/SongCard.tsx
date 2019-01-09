@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import YouTube from 'react-youtube';
 import { Mutation } from 'react-apollo';
@@ -60,43 +59,41 @@ class SongCard extends React.Component<Props, {}> {
                                     this.props.album
                                 }`}</h3>
                             </CardContent>
-                            <CardActionArea className={classes.cardFooter}>
-                                <CardActions>
-                                    {this.props.loggedIn && (
-                                        <React.Fragment>
-                                            <UserBookmark songId={this.props.songId} />
-                                            <Button
-                                                className={classes.button}
-                                                variant="contained"
-                                                color="primary"
-                                            >
-                                                Edit
-                                            </Button>
-                                            <Button
-                                                onClick={() =>
-                                                    removeSong({
-                                                        variables: {
-                                                            songId: Number(this.props.songId),
-                                                        },
-                                                    })
-                                                }
-                                                className={classes.button}
-                                                variant="contained"
-                                                color="secondary"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </React.Fragment>
-                                    )}
-                                    <Button
-                                        className={classes.button}
-                                        variant="contained"
-                                        onClick={() => this.props.history.goBack()}
-                                    >
-                                        Go Back
-                                    </Button>
-                                </CardActions>
-                            </CardActionArea>
+                            <CardActions className={classes.cardFooter}>
+                                {this.props.loggedIn && (
+                                    <React.Fragment>
+                                        <UserBookmark songId={this.props.songId} />
+                                        <Button
+                                            className={classes.button}
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            onClick={() =>
+                                                removeSong({
+                                                    variables: {
+                                                        songId: Number(this.props.songId),
+                                                    },
+                                                })
+                                            }
+                                            className={classes.button}
+                                            variant="contained"
+                                            color="secondary"
+                                        >
+                                            Delete
+                                        </Button>
+                                    </React.Fragment>
+                                )}
+                                <Button
+                                    className={classes.button}
+                                    variant="contained"
+                                    onClick={() => this.props.history.goBack()}
+                                >
+                                    Go Back
+                                </Button>
+                            </CardActions>
                         </Card>
                     );
                 }}
