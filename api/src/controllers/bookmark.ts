@@ -42,7 +42,7 @@ export default {
                     ? [...user.bookmarks, bookmark]
                     : [bookmark];
 
-            userRepository.save(user);
+            await userRepository.save(user);
 
             return {
                 bookmark,
@@ -89,7 +89,7 @@ export default {
             if (prevBookmarkLength === user.bookmarks.length) {
                 throw new Error('Bookmark not found');
             }
-            userRepository.save(user);
+            await userRepository.save(user);
             return {
                 responseError: false,
             };
