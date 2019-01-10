@@ -2,6 +2,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import gql from 'graphql-tag';
 import { typeDefs as BookmarkTypeDefs, resolvers as BookmarkResolvers } from './Bookmark';
 import { typeDefs as SongTypeDefs, resolvers as SongResolvers } from './Song';
+import { typeDefs as SongHistoryTypeDefs, resolvers as SongHistoryResolvers } from './SongHistory';
 import { typeDefs as UserTypeDefs, resolvers as UserResolvers } from './User';
 import { merge } from 'lodash';
 import { Request } from 'express';
@@ -34,6 +35,8 @@ const typeDefs = gql`
         removeSong(songId: Int!): SongResponse
         addBookmark(userId: String!, songId: Int!): BookmarkResponse
         removeBookmark(userId: String!, bookmarkId: Int!): BookmarkResponse
+        addHistory(userId: String, songId: Int): SongResponse
+        clearHistory(userId: String): SongResponse
     }
 `;
 
@@ -45,6 +48,12 @@ export const context = ({ req }: { req: Request }) => {
 };
 
 export const schema = makeExecutableSchema({
-    typeDefs: [typeDefs, UserTypeDefs, SongTypeDefs, BookmarkTypeDefs],
-    resolvers: merge(resolvers, UserResolvers, SongResolvers, BookmarkResolvers),
+    typeDefs: [typeDefs, UserTypeDefs, SongTypeDefs, BookmarkTypeDefs, SongHistoryTypeDefs],
+    resolvers: merge(
+        resolvers,
+        UserResolvers,
+        SongResolvers,
+        BookmarkResolvers,
+        SongHistoryResolvers
+    ),
 });

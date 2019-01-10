@@ -10,6 +10,7 @@ export const typeDefs = gql`
         lastName: String
         email: String
         bookmarks: [Bookmark]
+        history: SongHistory
     }
     type UserResponse {
         user: User
