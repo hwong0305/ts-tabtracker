@@ -43,12 +43,14 @@ class UserBookmarks extends React.Component<Props> {
                                 }
                                 let bookmarked = false;
                                 let bookmarkId = -2;
-                                if (!bookmarked) {
+                                if (!bookmarked && data.user.user.bookmarks) {
                                     data.user.user.bookmarks.forEach((bookmark: Bookmark) => {
-                                        if (bookmark.songs[0].id === Number(this.props.songId)) {
-                                            bookmarked = true;
-                                            bookmarkId = bookmark.id;
-                                        }
+                                        bookmark.songs.forEach((song: Song) => {
+                                            if (song.id === Number(this.props.songId)) {
+                                                bookmarked = true;
+                                                bookmarkId = bookmark.id;
+                                            }
+                                        });
                                     });
                                 }
                                 if (bookmarked) {

@@ -78,7 +78,7 @@ export default {
         try {
             const userRepository = await getConnection().getRepository(User);
             const users = await userRepository.find({
-                relations: ['bookmarks', 'bookmarks.songs'],
+                relations: ['bookmarks', 'bookmarks.songs', 'history', 'history.songs'],
             });
             return users;
         } catch (err) {
@@ -91,7 +91,7 @@ export default {
             const userRepository = await getConnection().getRepository(User);
             const user = await userRepository.findOne({
                 where: { username },
-                relations: ['bookmarks', 'bookmarks.songs'],
+                relations: ['bookmarks', 'bookmarks.songs', 'history', 'history.songs'],
             });
             return {
                 user,
@@ -108,7 +108,7 @@ export default {
         try {
             const userRepository = await getConnection().getRepository(User);
             const user = await userRepository.findOne(userId, {
-                relations: ['bookmarks', 'bookmarks.songs'],
+                relations: ['bookmarks', 'bookmarks.songs', 'history', 'history.songs'],
             });
             return {
                 user,

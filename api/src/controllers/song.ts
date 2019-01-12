@@ -88,7 +88,7 @@ export default {
     async findSong(id: number) {
         try {
             const songRepository = await getConnection().getRepository(Song);
-            const song = songRepository.findOne(id);
+            const song = await songRepository.findOne(id);
             if (song) {
                 return {
                     song,
@@ -100,6 +100,24 @@ export default {
                 };
             }
         } catch (err) {
+            return {
+                responseError: true,
+            };
+        }
+    },
+    async deleteSong(songId: number) {
+        try {
+            const songRepository = await getConnection().getRepository(Song);
+            const song = await songRepository.findOne(songId);
+            if (!song) {
+                throw new Error('Invalid Song ID');
+            }
+            await songRepository.remove(song);
+            return {
+                responseError: false,
+            };
+        } catch (err) {
+            console.log(err);
             return {
                 responseError: true,
             };

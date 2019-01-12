@@ -1,6 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    JoinColumn,
+    OneToOne,
+} from 'typeorm';
 import { IsAlpha, IsEmail, IsNotEmpty, Matches } from 'class-validator';
 import { Bookmark } from './Bookmark';
+import { SongHistory } from './SongHistory';
 
 @Entity()
 export class User {
@@ -35,4 +44,8 @@ export class User {
     @ManyToMany(_type => Bookmark, { cascade: true })
     @JoinTable()
     bookmarks: Bookmark[];
+
+    @OneToOne(_type => SongHistory)
+    @JoinColumn()
+    history: SongHistory;
 }

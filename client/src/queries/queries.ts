@@ -115,7 +115,32 @@ export const FIND_USER = gql`
                         album
                     }
                 }
+                history {
+                    songs {
+                        id
+                        artist
+                        title
+                        album
+                        albumImg
+                    }
+                }
             }
+        }
+    }
+`;
+
+export const REMOVE_SONG = gql`
+    mutation removeSong($songId: Int!) {
+        removeSong(songId: $songId) {
+            responseError
+        }
+    }
+`;
+
+export const ADD_HISTORY = gql`
+    mutation addHistory($userId: String, $songId: Int) {
+        addHistory(userId: $userId, songId: $songId) {
+            responseError
         }
     }
 `;
