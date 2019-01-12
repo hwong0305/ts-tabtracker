@@ -12,6 +12,7 @@ import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
 import ViewSong from './containers/ViewSong';
+import UserInfo from './containers/UserInfo';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -81,6 +82,7 @@ ReactDOM.render(
                     <Route path="/create/song" component={AddSong} />
                     <Route path="/song/:id" component={ViewSong} />
                     <Route path="/bookmarks" component={Bookmarks} />
+                    <Route path="/user" component={UserInfo} />
                 </React.Fragment>
             </Router>
         </UserProvider>
