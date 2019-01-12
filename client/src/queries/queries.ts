@@ -115,6 +115,15 @@ export const FIND_USER = gql`
                         album
                     }
                 }
+                history {
+                    songs {
+                        id
+                        artist
+                        title
+                        album
+                        albumImg
+                    }
+                }
             }
         }
     }
