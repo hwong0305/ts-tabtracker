@@ -127,3 +127,11 @@ export const REMOVE_SONG = gql`
         }
     }
 `;
+
+export const ADD_HISTORY = gql`
+    mutation addHistory($userId: String, $songId: Int) {
+        addHistory(userId: $userId, songId: $songId) {
+            responseError
+        }
+    }
+`;

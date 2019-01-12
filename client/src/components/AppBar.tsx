@@ -22,6 +22,7 @@ const BookmarksLink: React.SFC<{}> = props => <Link to="/bookmarks" {...props} /
 const LoginLink: React.SFC<{}> = props => <Link to="/login" {...props} />;
 const RegisterLink: React.SFC<{}> = props => <Link to="/register" {...props} />;
 const BrowseLink: React.SFC<{}> = props => <Link to="/" {...props} />;
+const HistoryLink: React.SFC<{}> = props => <Link to="/user" {...props} />;
 
 const LoginButton: React.SFC<{}> = () => (
     <React.Fragment>
@@ -47,6 +48,9 @@ const LogoutButton: React.SFC<{}> = () => (
                     </Button>
                     <Button color="inherit" component={BookmarksLink}>
                         Bookmarks
+                    </Button>
+                    <Button color="inherit" component={HistoryLink}>
+                        History
                     </Button>
                     <Button
                         color="inherit"

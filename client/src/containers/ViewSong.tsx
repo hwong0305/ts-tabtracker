@@ -7,6 +7,7 @@ import { SONG } from '../queries/queries';
 import '../styles/view.css';
 
 import SongCard from '../components/SongCard';
+import AddHistory from '../components/AddHistory';
 
 interface Props {
     history: History;
@@ -24,6 +25,12 @@ class ViewSong extends React.Component<Props, {}> {
                 {context => (
                     <div>
                         <MyAppBar />
+                        {context && context.state.userID && (
+                            <AddHistory
+                                songId={this.props.match.params.id}
+                                userId={context.state.userID}
+                            />
+                        )}
                         {context && (
                             <header className="App-header">
                                 <Query

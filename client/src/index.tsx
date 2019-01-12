@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import './App.css';
@@ -8,6 +8,7 @@ import './index.css';
 
 import AddSong from './containers/AddSong';
 import Bookmarks from './containers/Bookmarks';
+import Default from './containers/Default';
 import Login from './containers/Login';
 import Register from './containers/Register';
 import Song from './containers/Song';
@@ -76,13 +77,16 @@ ReactDOM.render(
         <UserProvider>
             <Router>
                 <React.Fragment>
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
-                    <Route exact={true} path="/" component={Song} />
-                    <Route path="/create/song" component={AddSong} />
-                    <Route path="/song/:id" component={ViewSong} />
-                    <Route path="/bookmarks" component={Bookmarks} />
-                    <Route path="/user" component={UserInfo} />
+                    <Switch>
+                        <Route path="/login" component={Login} />
+                        <Route path="/register" component={Register} />
+                        <Route exact={true} path="/" component={Song} />
+                        <Route path="/create/song" component={AddSong} />
+                        <Route path="/song/:id" component={ViewSong} />
+                        <Route path="/bookmarks" component={Bookmarks} />
+                        <Route path="/user" component={UserInfo} />
+                        <Route component={Default} />
+                    </Switch>
                 </React.Fragment>
             </Router>
         </UserProvider>
